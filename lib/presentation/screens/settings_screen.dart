@@ -4,6 +4,7 @@ import '../../data/services/settings_service.dart';
 import 'dart:io';
 import '../../data/services/backup_service.dart';
 import '../../data/services/locale_service.dart';
+import '../../l10n/app_localizations.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -97,18 +98,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await SettingsService.setLogoPath(_logoPath);
     await SettingsService.setDarkModeEnabled(_darkMode);
     if (!mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Đã lưu cài đặt')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(AppLocalizations.of(context)!.success)),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cài đặt'),
+        title: Text(AppLocalizations.of(context)!.settings),
         actions: [
-          TextButton(onPressed: _saveSettings, child: const Text('Lưu')),
+          TextButton(
+            onPressed: _saveSettings,
+            child: Text(AppLocalizations.of(context)!.save),
+          ),
         ],
       ),
       body: Padding(
@@ -118,25 +122,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               TextField(
                 controller: _storeNameCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Tên cửa hàng',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.storeName,
+                  border: const OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: _storeAddressCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Địa chỉ',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.storeAddress,
+                  border: const OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: _storePhoneCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Số điện thoại',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.storePhone,
+                  border: const OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 16),
@@ -146,9 +150,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: TextField(
                       controller: _vatCtrl,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'VAT %',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.vat,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                   ),
@@ -157,9 +161,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: TextField(
                       controller: _serviceFeeCtrl,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Phí DV %',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.serviceFee,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                   ),
@@ -174,19 +178,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   if (!mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(
-                        v ? 'Đã bật Dark Mode' : 'Đã tắt Dark Mode',
-                      ),
+                      content: Text(AppLocalizations.of(context)!.success),
                     ),
                   );
                 },
-                title: const Text('Dark mode'),
+                title: Text(AppLocalizations.of(context)!.darkMode),
               ),
               const SizedBox(height: 12),
               SwitchListTile(
                 value: _vatInclusive,
                 onChanged: (v) => setState(() => _vatInclusive = v),
-                title: const Text('Giá đã gồm VAT (vat-inclusive)'),
+                title: Text(AppLocalizations.of(context)!.vat),
               ),
               const SizedBox(height: 16),
               Row(
@@ -194,14 +196,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Expanded(
                     child: OutlinedButton.icon(
                       icon: const Icon(Icons.file_download),
-                      label: const Text('Xuất sao lưu'),
+                      label: Text(AppLocalizations.of(context)!.exportBackup),
                       onPressed: () async {
                         try {
                           await BackupService.shareBackup();
                         } catch (e) {
                           if (!mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Lỗi xuất sao lưu: $e')),
+                            SnackBar(
+                              content: Text(
+                                '${AppLocalizations.of(context)!.backupError}: $e',
+                              ),
+                            ),
                           );
                         }
                       },
@@ -211,15 +217,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Expanded(
                     child: OutlinedButton.icon(
                       icon: const Icon(Icons.file_upload),
-                      label: const Text('Nhập sao lưu'),
+                      label: Text(AppLocalizations.of(context)!.importBackup),
                       onPressed: () async {
                         final path = await showDialog<String>(
                           context: context,
                           builder: (ctx) {
                             final ctrl = TextEditingController();
                             return AlertDialog(
-                              title: const Text(
-                                'Nhập đường dẫn file backup (.isar)',
+                              title: Text(
+                                AppLocalizations.of(context)!.importBackup,
                               ),
                               content: TextField(
                                 controller: ctrl,
@@ -231,12 +237,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               actions: [
                                 TextButton(
                                   onPressed: () => Navigator.of(ctx).pop(),
-                                  child: const Text('Hủy'),
+                                  child: Text(
+                                    AppLocalizations.of(context)!.cancel,
+                                  ),
                                 ),
                                 FilledButton(
                                   onPressed: () =>
                                       Navigator.of(ctx).pop(ctrl.text.trim()),
-                                  child: const Text('OK'),
+                                  child: Text(
+                                    AppLocalizations.of(context)!.yes,
+                                  ),
                                 ),
                               ],
                             );
@@ -248,8 +258,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           if (!await file.exists()) {
                             if (!mounted) return;
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('File không tồn tại'),
+                              SnackBar(
+                                content: Text(
+                                  AppLocalizations.of(context)!.fileNotFound,
+                                ),
                               ),
                             );
                             return;
@@ -257,9 +269,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           await BackupService.importBackup(file);
                           if (!mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
+                            SnackBar(
                               content: Text(
-                                'Đã nhập sao lưu. Khởi động lại ứng dụng.',
+                                AppLocalizations.of(context)!.backupImported,
                               ),
                             ),
                           );
@@ -271,7 +283,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         } catch (e) {
                           if (!mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Lỗi nhập sao lưu: $e')),
+                            SnackBar(
+                              content: Text(
+                                '${AppLocalizations.of(context)!.backupError}: $e',
+                              ),
+                            ),
                           );
                         }
                       },
@@ -285,9 +301,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Expanded(
                     child: TextField(
                       controller: _currencyCtrl,
-                      decoration: const InputDecoration(
-                        labelText: 'Mã tiền tệ (VD: VND, USD)',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.currency,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                   ),
@@ -295,9 +311,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Expanded(
                     child: DropdownButtonFormField<String>(
                       value: _currentLocale,
-                      decoration: const InputDecoration(
-                        labelText: 'Ngôn ngữ',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.locale,
+                        border: const OutlineInputBorder(),
                       ),
                       items: const [
                         DropdownMenuItem(
@@ -316,7 +332,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                  'Đã đổi ngôn ngữ. Khởi động lại ứng dụng.',
+                                  AppLocalizations.of(context)!.success,
                                 ),
                               ),
                             );
@@ -334,9 +350,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: TextField(
                       controller: _decimalCtrl,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Số chữ số thập phân',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.decimalDigits,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                   ),
@@ -345,9 +361,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: TextField(
                       controller: _footerCtrl,
                       maxLines: 1,
-                      decoration: const InputDecoration(
-                        labelText: 'Footer hóa đơn',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.receiptFooter,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                   ),
@@ -359,8 +375,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Expanded(
                     child: Text(
                       _logoPath == null || _logoPath!.isEmpty
-                          ? 'Chưa chọn logo'
-                          : 'Logo: $_logoPath',
+                          ? AppLocalizations.of(context)!.logo
+                          : '${AppLocalizations.of(context)!.logo}: $_logoPath',
                     ),
                   ),
                   OutlinedButton(
@@ -373,7 +389,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             : null;
                       });
                     },
-                    child: const Text('Chọn logo'),
+                    child: Text(AppLocalizations.of(context)!.logo),
                   ),
                 ],
               ),

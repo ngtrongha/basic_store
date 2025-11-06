@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 import '../../data/models/payment.dart';
 import '../../data/models/promotion.dart';
@@ -55,15 +56,19 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Thanh toán'),
+      title: Text(AppLocalizations.of(context)!.checkout),
       content: SizedBox(
         width: double.maxFinite,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Tổng tiền: ${widget.totalAmount.toStringAsFixed(0)} đ'),
+            Text(
+              '${AppLocalizations.of(context)!.total}: ${widget.totalAmount.toStringAsFixed(0)} đ',
+            ),
             if (widget.appliedCoupon != null)
-              Text('Coupon: ${widget.appliedCoupon!.couponCode}'),
+              Text(
+                '${AppLocalizations.of(context)!.couponCode}: ${widget.appliedCoupon!.couponCode}',
+              ),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -71,8 +76,8 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                   child: TextField(
                     controller: _cashCtrl,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Tiền mặt',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.cash,
                       prefixText: 'đ ',
                     ),
                     onSubmitted: (value) {
@@ -89,8 +94,8 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                   child: TextField(
                     controller: _cardCtrl,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Thẻ',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.card,
                       prefixText: 'đ ',
                     ),
                     onSubmitted: (value) {
@@ -107,8 +112,8 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                   child: TextField(
                     controller: _ewalletCtrl,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Ví điện tử',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.eWallet,
                       prefixText: 'đ ',
                     ),
                     onSubmitted: (value) {
@@ -124,9 +129,9 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
             ),
             const SizedBox(height: 16),
             if (_payments.isNotEmpty) ...[
-              const Text(
-                'Thanh toán:',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              Text(
+                AppLocalizations.of(context)!.paymentMethod,
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               ..._payments.asMap().entries.map((entry) {
                 final index = entry.key;
@@ -151,13 +156,13 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Hủy'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         FilledButton(
           onPressed: _isComplete
               ? () => Navigator.of(context).pop(_payments)
               : null,
-          child: const Text('Xác nhận'),
+          child: Text(AppLocalizations.of(context)!.yes),
         ),
       ],
     );

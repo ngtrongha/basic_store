@@ -703,6 +703,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Information'**
   String get info;
+
+  /// No description provided for @notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notes;
+
+  /// No description provided for @reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason'**
+  String get reason;
+
+  /// No description provided for @status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status;
 }
 
 class _AppLocalizationsDelegate

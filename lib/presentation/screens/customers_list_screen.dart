@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 import '../../data/models/customer.dart';
 import '../../data/repositories/customer_repository.dart';
@@ -41,28 +42,34 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
     await showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Thêm khách hàng'),
+        title: Text(AppLocalizations.of(context)!.addCustomer),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: nameCtrl,
-              decoration: const InputDecoration(labelText: 'Tên'),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.customerName,
+              ),
             ),
             TextField(
               controller: phoneCtrl,
-              decoration: const InputDecoration(labelText: 'SĐT'),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.customerPhone,
+              ),
             ),
             TextField(
               controller: emailCtrl,
-              decoration: const InputDecoration(labelText: 'Email'),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.customerEmail,
+              ),
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Hủy'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           FilledButton(
             onPressed: () async {
@@ -80,7 +87,7 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
               if (mounted) Navigator.pop(context);
               await _load();
             },
-            child: const Text('Lưu'),
+            child: Text(AppLocalizations.of(context)!.save),
           ),
         ],
       ),
@@ -91,7 +98,7 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Khách hàng'),
+        title: Text(AppLocalizations.of(context)!.customers),
         actions: [
           IconButton(
             onPressed: _createQuick,
@@ -105,10 +112,10 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
             padding: const EdgeInsets.all(12),
             child: TextField(
               controller: _searchCtrl,
-              decoration: const InputDecoration(
-                hintText: 'Tìm theo tên/SĐT/email',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: AppLocalizations.of(context)!.search,
+                prefixIcon: const Icon(Icons.search),
+                border: const OutlineInputBorder(),
               ),
               onChanged: (q) async {
                 final list = await _repo.search(query: q, limit: 200);
@@ -130,7 +137,7 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
                       [
                         if (c.phone != null) c.phone!,
                         if (c.email != null) c.email!,
-                        'Điểm: ${c.points}',
+                        '${AppLocalizations.of(context)!.customerPoints}: ${c.points}',
                       ].join(' • '),
                     ),
                   );

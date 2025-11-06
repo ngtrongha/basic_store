@@ -103,5 +103,8 @@
   "error": "Lỗi",
   "success": "Thành công",
   "warning": "Cảnh báo",
-  "info": "Thông tin"
+  "info": "Thông tin",
+  "notes": "Ghi chú",
+  "reason": "Lý do",
+  "status": "Trạng thái"
 }

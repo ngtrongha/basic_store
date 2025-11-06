@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 import '../../data/models/stock_transfer.dart';
 import '../../data/models/store.dart';
@@ -140,9 +141,7 @@ class _StockTransfersScreenState extends State<StockTransfersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.storeId != null ? 'Chuyển kho' : 'Tất cả chuyển kho',
-        ),
+        title: Text(AppLocalizations.of(context)!.stockTransfers),
         actions: [
           IconButton(icon: const Icon(Icons.refresh), onPressed: _loadData),
         ],
@@ -150,7 +149,7 @@ class _StockTransfersScreenState extends State<StockTransfersScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _transfers.isEmpty
-          ? const Center(child: Text('Chưa có chuyển kho nào'))
+          ? Center(child: Text(AppLocalizations.of(context)!.noData))
           : ListView.builder(
               itemCount: _transfers.length,
               itemBuilder: (context, index) {
@@ -169,11 +168,16 @@ class _StockTransfersScreenState extends State<StockTransfersScreen> {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Từ: ${_getStoreName(transfer.fromStoreId)}'),
-                        Text('Đến: ${_getStoreName(transfer.toStoreId)}'),
-                        Text('Trạng thái: ${transfer.status}'),
+                        Text(
+                          '${AppLocalizations.of(context)!.stores}: ${_getStoreName(transfer.fromStoreId)} → ${_getStoreName(transfer.toStoreId)}',
+                        ),
+                        Text(
+                          '${AppLocalizations.of(context)!.status}: ${transfer.status}',
+                        ),
                         if (transfer.notes?.isNotEmpty == true)
-                          Text('Ghi chú: ${transfer.notes}'),
+                          Text(
+                            '${AppLocalizations.of(context)!.notes}: ${transfer.notes}',
+                          ),
                       ],
                     ),
                     trailing: transfer.status == 'pending'
@@ -221,16 +225,16 @@ class _TransferDialogState extends State<_TransferDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Tạo chuyển kho'),
+      title: Text(AppLocalizations.of(context)!.stockTransfers),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             DropdownButtonFormField<int>(
               value: _fromStoreId,
-              decoration: const InputDecoration(
-                labelText: 'Từ cửa hàng',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.stores,
+                border: const OutlineInputBorder(),
               ),
               items: widget.stores.map((store) {
                 return DropdownMenuItem(
@@ -243,9 +247,9 @@ class _TransferDialogState extends State<_TransferDialog> {
             const SizedBox(height: 12),
             DropdownButtonFormField<int>(
               value: _toStoreId,
-              decoration: const InputDecoration(
-                labelText: 'Đến cửa hàng',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.stores,
+                border: const OutlineInputBorder(),
               ),
               items: widget.stores.map((store) {
                 return DropdownMenuItem(
@@ -258,9 +262,9 @@ class _TransferDialogState extends State<_TransferDialog> {
             const SizedBox(height: 12),
             DropdownButtonFormField<int>(
               value: _productId,
-              decoration: const InputDecoration(
-                labelText: 'Sản phẩm',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.products,
+                border: const OutlineInputBorder(),
               ),
               items: widget.products.map((product) {
                 return DropdownMenuItem(
@@ -274,17 +278,17 @@ class _TransferDialogState extends State<_TransferDialog> {
             TextField(
               controller: _quantityCtrl,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Số lượng',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.quantity,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: _notesCtrl,
-              decoration: const InputDecoration(
-                labelText: 'Ghi chú',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.notes ?? 'Notes',
+                border: const OutlineInputBorder(),
               ),
             ),
           ],
@@ -293,7 +297,7 @@ class _TransferDialogState extends State<_TransferDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Hủy'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         FilledButton(
           onPressed: () {
@@ -301,14 +305,14 @@ class _TransferDialogState extends State<_TransferDialog> {
                 _toStoreId == null ||
                 _productId == null) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Vui lòng chọn đầy đủ thông tin')),
+                SnackBar(content: Text(AppLocalizations.of(context)!.warning)),
               );
               return;
             }
             final quantity = int.tryParse(_quantityCtrl.text.trim());
             if (quantity == null || quantity <= 0) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Số lượng không hợp lệ')),
+                SnackBar(content: Text(AppLocalizations.of(context)!.error)),
               );
               return;
             }
@@ -322,7 +326,7 @@ class _TransferDialogState extends State<_TransferDialog> {
                   : _notesCtrl.text.trim(),
             });
           },
-          child: const Text('Tạo'),
+          child: Text(AppLocalizations.of(context)!.save),
         ),
       ],
     );

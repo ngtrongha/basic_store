@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 import '../../data/models/purchase_order.dart';
 import '../../data/models/product.dart';
@@ -55,7 +56,7 @@ class _PurchaseOrderDialogState extends State<PurchaseOrderDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Tạo đơn mua hàng'),
+      title: Text(AppLocalizations.of(context)!.addSupplier),
       content: SizedBox(
         width: double.maxFinite,
         child: Column(
@@ -68,9 +69,9 @@ class _PurchaseOrderDialogState extends State<PurchaseOrderDialog> {
               onChanged: (p) {
                 if (p != null) _addItem(p);
               },
-              decoration: const InputDecoration(
-                labelText: 'Thêm sản phẩm',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.addProduct,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 12),
@@ -100,8 +101,10 @@ class _PurchaseOrderDialogState extends State<PurchaseOrderDialog> {
                           Expanded(
                             child: TextField(
                               keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                labelText: 'SL',
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(
+                                  context,
+                                )!.quantity,
                               ),
                               onChanged: (v) => _updateQty(
                                 index,
@@ -113,8 +116,8 @@ class _PurchaseOrderDialogState extends State<PurchaseOrderDialog> {
                           Expanded(
                             child: TextField(
                               keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                labelText: 'Đơn giá',
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context)!.price,
                               ),
                               onChanged: (v) => _updateCost(
                                 index,

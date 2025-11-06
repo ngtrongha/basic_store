@@ -1,4 +1,4 @@
-package com.example.basic_store
+package com.hncrop.vnstore
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,6 +1,7 @@
 import 'package:basic_store/data/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../l10n/app_localizations.dart';
 
 import '../../logic/cubits/pos_cubit/pos_cubit.dart';
 import '../../logic/cubits/pos_cubit/pos_state.dart';
@@ -29,7 +30,7 @@ class PosScreen extends StatelessWidget {
       value: context.read<PosCubit>(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Bán hàng'),
+          title: Text(AppLocalizations.of(context)!.pos),
           actions: [
             IconButton(
               icon: const Icon(Icons.picture_as_pdf),
@@ -37,7 +38,9 @@ class PosScreen extends StatelessWidget {
                 final state = context.read<PosCubit>().state;
                 if (state.cartItems.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Giỏ hàng trống')),
+                    SnackBar(
+                      content: Text(AppLocalizations.of(context)!.warning),
+                    ),
                   );
                   return;
                 }
@@ -55,12 +58,16 @@ class PosScreen extends StatelessWidget {
             ),
             IconButton(
               icon: const Icon(Icons.person_search),
-              tooltip: 'Chọn khách hàng',
+              tooltip: AppLocalizations.of(context)!.selectCustomer,
               onPressed: () async {
                 final selected = await _selectCustomer(context);
                 if (selected != null) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Chọn: ${selected.name}')),
+                    SnackBar(
+                      content: Text(
+                        '${AppLocalizations.of(context)!.selectCustomer}: ${selected.name}',
+                      ),
+                    ),
                   );
                 }
               },
@@ -89,8 +96,10 @@ class PosScreen extends StatelessWidget {
                                 if (p == null) {
                                   if (!context.mounted) return;
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Không tìm thấy SKU'),
+                                    SnackBar(
+                                      content: Text(
+                                        AppLocalizations.of(context)!.error,
+                                      ),
                                     ),
                                   );
                                   return;
@@ -103,7 +112,7 @@ class PosScreen extends StatelessWidget {
                           ),
                           const SizedBox(width: 12),
                           IconButton(
-                            tooltip: 'Quét mã',
+                            tooltip: AppLocalizations.of(context)!.scanBarcode,
                             icon: const Icon(Icons.qr_code_scanner),
                             onPressed: () async {
                               final result = await Navigator.of(
@@ -128,7 +137,9 @@ class PosScreen extends StatelessWidget {
                           Expanded(
                             child: TextField(
                               decoration: InputDecoration(
-                                hintText: 'Nhập mã coupon',
+                                hintText: AppLocalizations.of(
+                                  context,
+                                )!.couponCode,
                                 suffixIcon: state.couponCode != null
                                     ? IconButton(
                                         icon: const Icon(Icons.clear),
@@ -206,19 +217,19 @@ class PosScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Tạm tính: ${state.subtotal.toStringAsFixed(0)} đ',
+                              '${AppLocalizations.of(context)!.subtotal}: ${state.subtotal.toStringAsFixed(0)} đ',
                             ),
                             if (state.cartDiscount > 0)
                               Text(
-                                'Giảm: -${state.cartDiscount.toStringAsFixed(0)} đ',
+                                '${AppLocalizations.of(context)!.discount}: -${state.cartDiscount.toStringAsFixed(0)} đ',
                               ),
                             if (state.vatAmount > 0)
                               Text(
-                                'VAT: ${state.vatAmount.toStringAsFixed(0)} đ',
+                                '${AppLocalizations.of(context)!.vat}: ${state.vatAmount.toStringAsFixed(0)} đ',
                               ),
                             if (state.serviceFee > 0)
                               Text(
-                                'Phí DV: ${state.serviceFee.toStringAsFixed(0)} đ',
+                                '${AppLocalizations.of(context)!.serviceFee}: ${state.serviceFee.toStringAsFixed(0)} đ',
                               ),
                           ],
                         ),
@@ -241,7 +252,11 @@ class PosScreen extends StatelessWidget {
                       onPressed: () async {
                         if (state.cartItems.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Giỏ hàng trống')),
+                            SnackBar(
+                              content: Text(
+                                AppLocalizations.of(context)!.warning,
+                              ),
+                            ),
                           );
                           return;
                         }
@@ -310,12 +325,14 @@ class PosScreen extends StatelessWidget {
                         context.read<PosCubit>().clearCart();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('Đã thanh toán đơn #$orderId'),
+                            content: Text(
+                              '${AppLocalizations.of(context)!.success}: #$orderId',
+                            ),
                           ),
                         );
                       },
                       icon: const Icon(Icons.payments),
-                      label: const Text('Thanh toán'),
+                      label: Text(AppLocalizations.of(context)!.checkout),
                     ),
                   ),
                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 import '../../data/services/data_export_service.dart';
 import 'package:intl/intl.dart';
 
@@ -48,15 +49,23 @@ class _DataExportScreenState extends State<DataExportScreen> {
     try {
       await exportFunction();
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Đã xuất $dataType thành công')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '${AppLocalizations.of(context)!.success}: $dataType',
+            ),
+          ),
+        );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Lỗi xuất $dataType: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '${AppLocalizations.of(context)!.error}: $dataType: $e',
+            ),
+          ),
+        );
       }
     } finally {
       setState(() => _loading = false);
@@ -138,41 +147,41 @@ class _DataExportScreenState extends State<DataExportScreen> {
                   const SizedBox(height: 8),
 
                   _buildExportButton(
-                    'Sản phẩm',
+                    AppLocalizations.of(context)!.products,
                     Icons.inventory,
                     () => _exportService.exportProductsToCsv(),
-                    'sản phẩm',
+                    AppLocalizations.of(context)!.products,
                   ),
 
                   _buildExportButton(
-                    'Đơn hàng',
+                    AppLocalizations.of(context)!.orders,
                     Icons.receipt,
                     () => _exportService.exportOrdersToCsv(
                       startDate: _startDate,
                       endDate: _endDate,
                     ),
-                    'đơn hàng',
+                    AppLocalizations.of(context)!.orders,
                   ),
 
                   _buildExportButton(
-                    'Khách hàng',
+                    AppLocalizations.of(context)!.customers,
                     Icons.people,
                     () => _exportService.exportCustomersToCsv(),
-                    'khách hàng',
+                    AppLocalizations.of(context)!.customers,
                   ),
 
                   _buildExportButton(
-                    'Kho hàng',
+                    AppLocalizations.of(context)!.inventory,
                     Icons.warehouse,
                     () => _exportService.exportInventoryToCsv(),
-                    'kho hàng',
+                    AppLocalizations.of(context)!.inventory,
                   ),
 
                   _buildExportButton(
-                    'Nhà cung cấp',
+                    AppLocalizations.of(context)!.suppliers,
                     Icons.local_shipping,
                     () => _exportService.exportSuppliersToCsv(),
-                    'nhà cung cấp',
+                    AppLocalizations.of(context)!.suppliers,
                   ),
 
                   _buildExportButton(
@@ -182,14 +191,14 @@ class _DataExportScreenState extends State<DataExportScreen> {
                       startDate: _startDate,
                       endDate: _endDate,
                     ),
-                    'thanh toán',
+                    'Thanh toán',
                   ),
 
                   _buildExportButton(
-                    'Nhật ký hoạt động',
+                    AppLocalizations.of(context)!.auditLog,
                     Icons.history,
                     () => _exportService.exportAuditLogToCsv(),
-                    'nhật ký hoạt động',
+                    AppLocalizations.of(context)!.auditLog,
                   ),
 
                   const SizedBox(height: 24),

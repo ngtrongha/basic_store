@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 import '../../data/repositories/audit_log_repository.dart';
 import '../../data/models/audit_log.dart';
@@ -27,7 +28,7 @@ class _AuditLogScreenState extends State<AuditLogScreen> {
     final allowed = await AuthService().hasRole(UserRole.manager);
     if (!allowed && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Cần quyền quản lý để xem nhật ký')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.warning)),
       );
       Navigator.of(context).pop();
       return;
@@ -49,7 +50,7 @@ class _AuditLogScreenState extends State<AuditLogScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Nhật ký hoạt động'),
+        title: Text(AppLocalizations.of(context)!.auditLog),
         actions: [
           IconButton(icon: const Icon(Icons.refresh), onPressed: _loadLogs),
         ],
@@ -57,7 +58,7 @@ class _AuditLogScreenState extends State<AuditLogScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _logs.isEmpty
-          ? const Center(child: Text('Chưa có nhật ký'))
+          ? Center(child: Text(AppLocalizations.of(context)!.noData))
           : ListView.builder(
               itemCount: _logs.length,
               itemBuilder: (context, i) {

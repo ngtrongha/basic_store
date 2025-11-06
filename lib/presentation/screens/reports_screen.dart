@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../data/services/reporting_service.dart';
@@ -32,7 +33,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final allowed = await AuthService().hasRole(UserRole.manager);
     if (!allowed && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Cần quyền quản lý để xem báo cáo')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.warning)),
       );
       Navigator.of(context).pop();
       return;
@@ -61,9 +62,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Lỗi: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')),
+        );
       }
     }
   }
@@ -97,13 +98,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
       );
 
       if (mounted) {
-        await Share.shareXFiles([XFile(file.path)], text: 'Báo cáo CSV');
+        await Share.shareXFiles([XFile(file.path)], text: 'CSV');
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Lỗi xuất CSV: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')),
+        );
       }
     }
   }
@@ -120,13 +121,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
       );
 
       if (mounted) {
-        await Share.shareXFiles([XFile(file.path)], text: 'Báo cáo PDF');
+        await Share.shareXFiles([XFile(file.path)], text: 'PDF');
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Lỗi xuất PDF: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')),
+        );
       }
     }
   }
@@ -135,7 +136,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Báo cáo'),
+        title: Text(AppLocalizations.of(context)!.reports),
         actions: [
           IconButton(
             icon: const Icon(Icons.date_range),

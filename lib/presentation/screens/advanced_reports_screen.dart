@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 import '../../data/services/advanced_reporting_service.dart';
 import 'package:intl/intl.dart';
 
@@ -94,7 +95,7 @@ class _AdvancedReportsScreenState extends State<AdvancedReportsScreen>
           IconButton(
             icon: const Icon(Icons.date_range),
             onPressed: _selectDateRange,
-            tooltip: 'Chọn khoảng thời gian',
+            tooltip: AppLocalizations.of(context)!.info,
           ),
           IconButton(
             icon: const Icon(Icons.refresh),

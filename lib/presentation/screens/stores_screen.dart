@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 import '../../data/models/store.dart';
 import '../../data/services/multi_store_service.dart';
@@ -48,15 +49,15 @@ class _StoresScreenState extends State<StoresScreen> {
       );
       _loadStores();
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Đã thêm cửa hàng')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context)!.success)),
+        );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Lỗi: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')),
+        );
       }
     }
   }
@@ -65,7 +66,7 @@ class _StoresScreenState extends State<StoresScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Quản lý cửa hàng'),
+        title: Text(AppLocalizations.of(context)!.stores),
         actions: [
           IconButton(icon: const Icon(Icons.refresh), onPressed: _loadStores),
         ],
@@ -73,7 +74,7 @@ class _StoresScreenState extends State<StoresScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _stores.isEmpty
-          ? const Center(child: Text('Chưa có cửa hàng nào'))
+          ? Center(child: Text(AppLocalizations.of(context)!.noData))
           : ListView.builder(
               itemCount: _stores.length,
               itemBuilder: (context, index) {
@@ -105,13 +106,15 @@ class _StoresScreenState extends State<StoresScreen> {
                         }
                       },
                       itemBuilder: (context) => [
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'transfers',
                           child: Row(
                             children: [
                               Icon(Icons.local_shipping),
                               SizedBox(width: 8),
-                              Text('Chuyển kho'),
+                              Text(
+                                AppLocalizations.of(context)!.stockTransfers,
+                              ),
                             ],
                           ),
                         ),

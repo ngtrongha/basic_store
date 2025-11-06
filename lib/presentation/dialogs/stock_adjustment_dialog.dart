@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 import '../../data/models/product.dart';
 import '../../data/models/stock_adjustment.dart';
@@ -51,7 +52,7 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Điều chỉnh tồn kho'),
+      title: Text(AppLocalizations.of(context)!.inventory),
       content: SizedBox(
         width: double.maxFinite,
         child: Column(
@@ -60,9 +61,9 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
             // Product selection
             DropdownButtonFormField<Product>(
               value: _selectedProduct,
-              decoration: const InputDecoration(
-                labelText: 'Sản phẩm',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.products,
+                border: const OutlineInputBorder(),
               ),
               items: _products.map((product) {
                 return DropdownMenuItem(
@@ -82,10 +83,10 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
             TextField(
               controller: _deltaCtrl,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Số lượng điều chỉnh (+/-)',
-                border: OutlineInputBorder(),
-                helperText: 'Dương để tăng, âm để giảm',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.quantity,
+                border: const OutlineInputBorder(),
+                helperText: '+/-',
               ),
             ),
             const SizedBox(height: 16),
@@ -93,9 +94,9 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
             // Reason selection
             DropdownButtonFormField<AdjustmentReason>(
               value: _selectedReason,
-              decoration: const InputDecoration(
-                labelText: 'Lý do',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.reason ?? 'Reason',
+                border: const OutlineInputBorder(),
               ),
               items: AdjustmentReason.values.map((reason) {
                 return DropdownMenuItem(
@@ -114,9 +115,9 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
             // Batch number
             TextField(
               controller: _batchCtrl,
-              decoration: const InputDecoration(
-                labelText: 'Số lô (tùy chọn)',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.info,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
@@ -148,9 +149,9 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
             // Notes
             TextField(
               controller: _notesCtrl,
-              decoration: const InputDecoration(
-                labelText: 'Ghi chú',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.notes ?? 'Notes',
+                border: const OutlineInputBorder(),
               ),
               maxLines: 2,
             ),
@@ -160,7 +161,7 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Hủy'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         FilledButton(
           onPressed: _canSubmit()
@@ -178,7 +179,7 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
                   });
                 }
               : null,
-          child: const Text('Xác nhận'),
+          child: Text(AppLocalizations.of(context)!.yes),
         ),
       ],
     );

@@ -310,4 +310,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get info => 'Information';
+
+  @override
+  String get notes => 'Notes';
+
+  @override
+  String get reason => 'Reason';
+
+  @override
+  String get status => 'Status';
 }

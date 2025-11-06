@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import '../../l10n/app_localizations.dart';
 
 class ScannerScreen extends StatefulWidget {
   const ScannerScreen({super.key});
@@ -19,10 +20,10 @@ class _ScannerScreenState extends State<ScannerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Quét mã'),
+        title: Text(AppLocalizations.of(context)!.scanBarcode),
         actions: [
           IconButton(
-            tooltip: 'Bật/Tắt đèn',
+            tooltip: AppLocalizations.of(context)!.info,
             onPressed: () async {
               await _controller.toggleTorch();
               HapticFeedback.selectionClick();
@@ -30,7 +31,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
             icon: const Icon(Icons.flash_on),
           ),
           IconButton(
-            tooltip: _continuous ? 'Tắt quét liên tục' : 'Bật quét liên tục',
+            tooltip: AppLocalizations.of(context)!.scanBarcode,
             onPressed: () {
               setState(() {
                 _continuous = !_continuous;
@@ -61,7 +62,9 @@ class _ScannerScreenState extends State<ScannerScreen> {
                   if (!mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Đã quét: $value (${_scanned.length})'),
+                      content: Text(
+                        '${AppLocalizations.of(context)!.success}: $value (${_scanned.length})',
+                      ),
                     ),
                   );
                 }
@@ -86,7 +89,9 @@ class _ScannerScreenState extends State<ScannerScreen> {
                           ? null
                           : () => Navigator.of(context).pop(_scanned.toList()),
                       icon: const Icon(Icons.check),
-                      label: Text('Hoàn tất (${_scanned.length})'),
+                      label: Text(
+                        '${AppLocalizations.of(context)!.success} (${_scanned.length})',
+                      ),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -96,7 +101,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
                       HapticFeedback.selectionClick();
                     },
                     icon: const Icon(Icons.restart_alt),
-                    label: const Text('Làm mới'),
+                    label: Text(AppLocalizations.of(context)!.refresh),
                   ),
                 ],
               ),

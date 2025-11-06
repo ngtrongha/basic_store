@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 import '../../data/models/supplier.dart';
 import '../../data/repositories/supplier_repository.dart';
@@ -44,30 +45,40 @@ class _SuppliersScreenState extends State<SuppliersScreen> {
     await showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Thêm nhà cung cấp'),
+        title: Text(AppLocalizations.of(context)!.addSupplier),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: nameCtrl,
-                decoration: const InputDecoration(labelText: 'Tên NCC'),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.supplierName,
+                ),
               ),
               TextField(
                 controller: contactCtrl,
-                decoration: const InputDecoration(labelText: 'Người liên hệ'),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.supplierContact,
+                ),
               ),
               TextField(
                 controller: phoneCtrl,
-                decoration: const InputDecoration(labelText: 'SĐT'),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.storePhone,
+                ),
               ),
               TextField(
                 controller: emailCtrl,
-                decoration: const InputDecoration(labelText: 'Email'),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.storeEmail,
+                ),
               ),
               TextField(
                 controller: addressCtrl,
-                decoration: const InputDecoration(labelText: 'Địa chỉ'),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.supplierAddress,
+                ),
               ),
             ],
           ),
@@ -75,7 +86,7 @@ class _SuppliersScreenState extends State<SuppliersScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Hủy'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           FilledButton(
             onPressed: () async {
@@ -97,7 +108,7 @@ class _SuppliersScreenState extends State<SuppliersScreen> {
               if (mounted) Navigator.pop(context);
               await _load();
             },
-            child: const Text('Lưu'),
+            child: Text(AppLocalizations.of(context)!.save),
           ),
         ],
       ),
@@ -108,7 +119,7 @@ class _SuppliersScreenState extends State<SuppliersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Nhà cung cấp'),
+        title: Text(AppLocalizations.of(context)!.suppliers),
         actions: [
           IconButton(
             onPressed: _createQuick,
@@ -122,10 +133,10 @@ class _SuppliersScreenState extends State<SuppliersScreen> {
             padding: const EdgeInsets.all(12),
             child: TextField(
               controller: _searchCtrl,
-              decoration: const InputDecoration(
-                hintText: 'Tìm theo tên/email/SĐT',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: AppLocalizations.of(context)!.search,
+                prefixIcon: const Icon(Icons.search),
+                border: const OutlineInputBorder(),
               ),
               onChanged: (q) async {
                 final list = await _repo.search(query: q, limit: 200);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 import '../../data/models/product.dart';
 
@@ -30,7 +31,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Thêm sản phẩm'),
+      title: Text(AppLocalizations.of(context)!.addProduct),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -39,32 +40,46 @@ class _AddProductDialogState extends State<AddProductDialog> {
             children: [
               TextFormField(
                 controller: _nameCtrl,
-                decoration: const InputDecoration(labelText: 'Tên sản phẩm'),
-                validator: (v) => (v == null || v.isEmpty) ? 'Nhập tên' : null,
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.productName,
+                ),
+                validator: (v) => (v == null || v.isEmpty)
+                    ? AppLocalizations.of(context)!.warning
+                    : null,
               ),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _skuCtrl,
-                decoration: const InputDecoration(labelText: 'SKU'),
-                validator: (v) => (v == null || v.isEmpty) ? 'Nhập SKU' : null,
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.sku,
+                ),
+                validator: (v) => (v == null || v.isEmpty)
+                    ? AppLocalizations.of(context)!.warning
+                    : null,
               ),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _costCtrl,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Giá nhập'),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.costPrice,
+                ),
               ),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _saleCtrl,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Giá bán'),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.salePrice,
+                ),
               ),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _stockCtrl,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Tồn kho'),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.stock,
+                ),
               ),
             ],
           ),
@@ -73,7 +88,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Hủy'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         FilledButton(
           onPressed: () {
@@ -86,7 +101,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
               ..stock = int.tryParse(_stockCtrl.text.trim()) ?? 0;
             Navigator.of(context).pop(p);
           },
-          child: const Text('Lưu'),
+          child: Text(AppLocalizations.of(context)!.save),
         ),
       ],
     );

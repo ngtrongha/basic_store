@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 import '../../data/services/auth_service.dart';
 
@@ -30,9 +31,9 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       if (!mounted) return;
       if (user == null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Sai tài khoản/mật khẩu')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context)!.loginError)),
+        );
       } else {
         Navigator.of(context).pushReplacementNamed('/');
       }
@@ -44,25 +45,25 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Đăng nhập')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.login)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             TextField(
               controller: _userCtrl,
-              decoration: const InputDecoration(
-                labelText: 'Tài khoản',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.username,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: _passCtrl,
               obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Mật khẩu',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.password,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 20),
@@ -72,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: _loading ? null : _login,
                 child: _loading
                     ? const CircularProgressIndicator()
-                    : const Text('Đăng nhập'),
+                    : Text(AppLocalizations.of(context)!.loginButton),
               ),
             ),
           ],

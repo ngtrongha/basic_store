@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 import '../../data/models/goods_receipt.dart';
 import '../../data/models/product.dart';
@@ -62,7 +63,7 @@ class _GrnReceiveDialogState extends State<GrnReceiveDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Nhập hàng'),
+      title: Text(AppLocalizations.of(context)!.importBackup),
       content: SizedBox(
         width: double.maxFinite,
         child: Column(
@@ -75,9 +76,9 @@ class _GrnReceiveDialogState extends State<GrnReceiveDialog> {
               onChanged: (p) {
                 if (p != null) _addItem(p);
               },
-              decoration: const InputDecoration(
-                labelText: 'Thêm sản phẩm',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.addProduct,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 12),
@@ -107,8 +108,10 @@ class _GrnReceiveDialogState extends State<GrnReceiveDialog> {
                           Expanded(
                             child: TextField(
                               keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                labelText: 'SL',
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(
+                                  context,
+                                )!.quantity,
                               ),
                               onChanged: (v) => _updateQty(
                                 index,
@@ -120,8 +123,8 @@ class _GrnReceiveDialogState extends State<GrnReceiveDialog> {
                           Expanded(
                             child: TextField(
                               keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                labelText: 'Đơn giá',
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context)!.price,
                               ),
                               onChanged: (v) => _updateCost(
                                 index,
@@ -141,9 +144,9 @@ class _GrnReceiveDialogState extends State<GrnReceiveDialog> {
             const SizedBox(height: 12),
             TextField(
               controller: _notesCtrl,
-              decoration: const InputDecoration(
-                labelText: 'Ghi chú',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.notes,
+                border: const OutlineInputBorder(),
               ),
               maxLines: 2,
             ),
@@ -161,7 +164,7 @@ class _GrnReceiveDialogState extends State<GrnReceiveDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Hủy'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         FilledButton(
           onPressed: _items.isNotEmpty
@@ -177,7 +180,7 @@ class _GrnReceiveDialogState extends State<GrnReceiveDialog> {
                   Navigator.pop(context, grn);
                 }
               : null,
-          child: const Text('Nhập hàng'),
+          child: Text(AppLocalizations.of(context)!.importBackup),
         ),
       ],
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 import '../../data/models/order.dart';
 import '../../data/models/return.dart';
@@ -92,16 +93,18 @@ class _ReturnDialogState extends State<ReturnDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Trả hàng - Đơn #${widget.order.id}'),
+      title: Text(
+        '${AppLocalizations.of(context)!.removeFromCart} - #${widget.order.id}',
+      ),
       content: SizedBox(
         width: double.maxFinite,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             // Order items
-            const Text(
-              'Sản phẩm trong đơn:',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context)!.products,
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             ...widget.order.items.map((orderItem) {
@@ -116,13 +119,15 @@ class _ReturnDialogState extends State<ReturnDialog> {
                 child: ListTile(
                   title: Text(product?.name ?? 'SP #${orderItem.productId}'),
                   subtitle: Text(
-                    'SL: ${orderItem.quantity} • Giá: ${orderItem.price.toStringAsFixed(0)} đ',
+                    'SL: ${orderItem.quantity} • ${AppLocalizations.of(context)!.price}: ${orderItem.price.toStringAsFixed(0)} đ',
                   ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (returnQty > 0) ...[
-                        Text('Trả: $returnQty'),
+                        Text(
+                          '${AppLocalizations.of(context)!.quantity}: $returnQty',
+                        ),
                         const SizedBox(width: 8),
                       ],
                       IconButton(
@@ -158,21 +163,23 @@ class _ReturnDialogState extends State<ReturnDialog> {
             if (_returnItems.isNotEmpty) ...[
               const SizedBox(height: 16),
               const Divider(),
-              Text('Tổng hoàn: ${_totalRefund.toStringAsFixed(0)} đ'),
+              Text(
+                '${AppLocalizations.of(context)!.total}: ${_totalRefund.toStringAsFixed(0)} đ',
+              ),
               const SizedBox(height: 16),
               TextField(
                 controller: _reasonCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Lý do trả hàng',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.reason,
+                  border: const OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 8),
               TextField(
                 controller: _notesCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Ghi chú',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.notes,
+                  border: const OutlineInputBorder(),
                 ),
                 maxLines: 2,
               ),
@@ -183,7 +190,7 @@ class _ReturnDialogState extends State<ReturnDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Hủy'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         FilledButton(
           onPressed: _returnItems.isNotEmpty && _reasonCtrl.text.isNotEmpty
@@ -193,7 +200,7 @@ class _ReturnDialogState extends State<ReturnDialog> {
                   'notes': _notesCtrl.text,
                 })
               : null,
-          child: const Text('Xác nhận trả hàng'),
+          child: Text(AppLocalizations.of(context)!.yes),
         ),
       ],
     );

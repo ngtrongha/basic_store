@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../logic/cubits/pos_cubit/pos_cubit.dart';
 import '../widgets/product_search_field.dart';
 import '../../data/services/favorite_service.dart';
+import '../../l10n/app_localizations.dart';
 
 class ProductListScreen extends StatefulWidget {
   const ProductListScreen({super.key});
@@ -70,7 +71,7 @@ class _ProductListScreenState extends State<ProductListScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Quản lý Sản phẩm'),
+        title: Text(AppLocalizations.of(context)!.products),
         actions: [
           IconButton(
             icon: const Icon(Icons.qr_code_scanner),
@@ -83,15 +84,23 @@ class _ProductListScreenState extends State<ProductListScreen>
               if (found == null) {
                 if (!mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Không tìm thấy SKU: $sku')),
+                  SnackBar(
+                    content: Text(
+                      '${AppLocalizations.of(context)!.error}: $sku',
+                    ),
+                  ),
                 );
                 return;
               }
               if (!mounted) return;
               context.read<PosCubit>().addProduct(found);
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text('Đã thêm: ${found.name}')));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    '${AppLocalizations.of(context)!.success}: ${found.name}',
+                  ),
+                ),
+              );
             },
           ),
           IconButton(
@@ -138,9 +147,9 @@ class _ProductListScreenState extends State<ProductListScreen>
           ),
           TabBar(
             controller: _tabController,
-            tabs: const [
-              Tab(text: 'Tất cả'),
-              Tab(text: 'Yêu thích'),
+            tabs: [
+              Tab(text: AppLocalizations.of(context)!.products),
+              Tab(text: AppLocalizations.of(context)!.favorites),
             ],
           ),
           Expanded(
@@ -156,12 +165,18 @@ class _ProductListScreenState extends State<ProductListScreen>
                       final p = _filteredProducts[index];
                       return ListTile(
                         title: Text(p.name),
-                        subtitle: Text('SKU: ${p.sku} • Tồn: ${p.stock}'),
+                        subtitle: Text(
+                          '${AppLocalizations.of(context)!.sku}: ${p.sku} • ${AppLocalizations.of(context)!.stock}: ${p.stock}',
+                        ),
                         trailing: Text('${p.salePrice.toStringAsFixed(0)} đ'),
                         onTap: () {
                           context.read<PosCubit>().addProduct(p);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Đã thêm: ${p.name}')),
+                            SnackBar(
+                              content: Text(
+                                '${AppLocalizations.of(context)!.success}: ${p.name}',
+                              ),
+                            ),
                           );
                         },
                       );
@@ -172,21 +187,29 @@ class _ProductListScreenState extends State<ProductListScreen>
                 RefreshIndicator(
                   onRefresh: _load,
                   child: _favoriteProducts.isEmpty
-                      ? const Center(child: Text('Chưa có sản phẩm yêu thích'))
+                      ? Center(
+                          child: Text(AppLocalizations.of(context)!.noData),
+                        )
                       : ListView.builder(
                           itemCount: _favoriteProducts.length,
                           itemBuilder: (context, index) {
                             final p = _favoriteProducts[index];
                             return ListTile(
                               title: Text(p.name),
-                              subtitle: Text('SKU: ${p.sku} • Tồn: ${p.stock}'),
+                              subtitle: Text(
+                                '${AppLocalizations.of(context)!.sku}: ${p.sku} • ${AppLocalizations.of(context)!.stock}: ${p.stock}',
+                              ),
                               trailing: Text(
                                 '${p.salePrice.toStringAsFixed(0)} đ',
                               ),
                               onTap: () {
                                 context.read<PosCubit>().addProduct(p);
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Đã thêm: ${p.name}')),
+                                  SnackBar(
+                                    content: Text(
+                                      '${AppLocalizations.of(context)!.success}: ${p.name}',
+                                    ),
+                                  ),
                                 );
                               },
                             );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 import '../widgets/numeric_keypad.dart';
 
 class QuantityDialog extends StatefulWidget {
@@ -34,7 +35,7 @@ class _QuantityDialogState extends State<QuantityDialog> {
         child: Column(
           children: [
             Text(
-              'Nhập số lượng cho ${widget.productName}',
+              '${AppLocalizations.of(context)!.quantity}: ${widget.productName}',
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
@@ -75,7 +76,7 @@ class _QuantityDialogState extends State<QuantityDialog> {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Hủy'),
+                    child: Text(AppLocalizations.of(context)!.cancel),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -85,7 +86,7 @@ class _QuantityDialogState extends State<QuantityDialog> {
                       final quantity = int.tryParse(_currentValue) ?? 0;
                       Navigator.of(context).pop(quantity);
                     },
-                    child: const Text('OK'),
+                    child: Text(AppLocalizations.of(context)!.yes),
                   ),
                 ),
               ],

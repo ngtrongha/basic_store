@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 import '../../data/models/product.dart';
 import '../../data/models/stock_adjustment.dart';
@@ -60,14 +61,26 @@ class _InventoryScreenState extends State<InventoryScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Quản lý kho'),
+        title: Text(AppLocalizations.of(context)!.inventory),
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [
-            Tab(text: 'Tổng quan', icon: Icon(Icons.dashboard)),
-            Tab(text: 'Sản phẩm', icon: Icon(Icons.inventory)),
-            Tab(text: 'Cảnh báo', icon: Icon(Icons.warning)),
-            Tab(text: 'Điều chỉnh', icon: Icon(Icons.edit)),
+          tabs: [
+            Tab(
+              text: AppLocalizations.of(context)!.dashboard,
+              icon: const Icon(Icons.dashboard),
+            ),
+            Tab(
+              text: AppLocalizations.of(context)!.products,
+              icon: const Icon(Icons.inventory),
+            ),
+            Tab(
+              text: AppLocalizations.of(context)!.warning,
+              icon: const Icon(Icons.warning),
+            ),
+            Tab(
+              text: AppLocalizations.of(context)!.edit,
+              icon: const Icon(Icons.edit),
+            ),
           ],
         ),
       ),
@@ -86,9 +99,7 @@ class _InventoryScreenState extends State<InventoryScreen>
           final allowed = await AuthService().hasRole(UserRole.manager);
           if (!allowed && mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Cần quyền quản lý để điều chỉnh kho'),
-              ),
+              SnackBar(content: Text(AppLocalizations.of(context)!.warning)),
             );
             return;
           }
@@ -108,15 +119,19 @@ class _InventoryScreenState extends State<InventoryScreen>
               );
               if (mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Đã điều chỉnh tồn kho')),
+                  SnackBar(
+                    content: Text(AppLocalizations.of(context)!.success),
+                  ),
                 );
                 _loadData();
               }
             } catch (e) {
               if (mounted) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text('Lỗi: $e')));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('${AppLocalizations.of(context)!.error}: $e'),
+                  ),
+                );
               }
             }
           }

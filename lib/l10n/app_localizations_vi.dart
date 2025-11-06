@@ -310,4 +310,13 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get info => 'Thông tin';
+
+  @override
+  String get notes => 'Ghi chú';
+
+  @override
+  String get reason => 'Lý do';
+
+  @override
+  String get status => 'Trạng thái';
 }

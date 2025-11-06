@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 import '../../data/repositories/product_repository.dart';
 import '../../data/repositories/order_repository.dart';
@@ -52,7 +53,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tổng quan'),
+        title: Text(AppLocalizations.of(context)!.dashboard),
         actions: [
           FutureBuilder<AppUser?>(
             future: _authService.getCurrentUser(),
@@ -75,11 +76,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 itemBuilder: (context) => [
                   PopupMenuItem(
                     value: 'logout',
-                    child: const Row(
+                    child: Row(
                       children: [
                         Icon(Icons.logout),
                         SizedBox(width: 8),
-                        Text('Đăng xuất'),
+                        Text(AppLocalizations.of(context)!.logout),
                       ],
                     ),
                   ),
@@ -145,25 +146,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
           mainAxisSpacing: 16,
           children: [
             _buildStatCard(
-              'Tổng sản phẩm',
+              AppLocalizations.of(context)!.totalProducts,
               _totalProducts.toString(),
               Icons.inventory,
               Colors.blue,
             ),
             _buildStatCard(
-              'Tổng đơn hàng',
+              AppLocalizations.of(context)!.totalOrders,
               _totalOrders.toString(),
               Icons.receipt,
               Colors.green,
             ),
             _buildStatCard(
-              'Doanh thu',
+              AppLocalizations.of(context)!.revenue,
               '${_totalRevenue.toStringAsFixed(0)} đ',
               Icons.attach_money,
               Colors.orange,
             ),
             _buildStatCard(
-              'Sắp hết hàng',
+              AppLocalizations.of(context)!.lowStock,
               _lowStockCount.toString(),
               Icons.warning,
               Colors.red,

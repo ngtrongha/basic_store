@@ -1,5 +1,6 @@
 import 'package:basic_store/data/models/return.dart';
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 import '../../data/models/order.dart';
 import '../../data/repositories/order_repository.dart';
@@ -35,7 +36,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Lịch sử đơn hàng')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.orders)),
       body: RefreshIndicator(
         onRefresh: _load,
         child: ListView.separated(
@@ -44,7 +45,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
           itemBuilder: (context, index) {
             final o = _orders[index];
             return ListTile(
-              title: Text('Đơn #${o.id}'),
+              title: Text('${AppLocalizations.of(context)!.orders} #${o.id}'),
               subtitle: Text('${o.createdAt}  •  ${o.items.length} sp'),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -76,7 +77,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    'Đã tạo phiếu trả hàng #$returnId',
+                                    '${AppLocalizations.of(context)!.success}: #$returnId',
                                   ),
                                 ),
                               );
@@ -84,7 +85,11 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                           } catch (e) {
                             if (mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Lỗi: $e')),
+                                SnackBar(
+                                  content: Text(
+                                    '${AppLocalizations.of(context)!.error}: $e',
+                                  ),
+                                ),
                               );
                             }
                           }
