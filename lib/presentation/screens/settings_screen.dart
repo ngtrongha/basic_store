@@ -231,7 +231,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 controller: ctrl,
                                 decoration: const InputDecoration(
                                   hintText:
-                                      '/storage/emulated/0/Download/basic_store_backup.isar',
+                                      '/storage/emulated/0/Download/basic_store_backup.json',
                                 ),
                               ),
                               actions: [

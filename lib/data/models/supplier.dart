@@ -1,18 +1,18 @@
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 
-part 'supplier.g.dart';
 
-@Collection()
+@Entity()
 class Supplier {
-  Id id = Isar.autoIncrement;
+  @Id()
+  int id = 0;
 
-  @Index(caseSensitive: false)
-  late String name;
+  @Index()
+  String name = '';
 
   String? contactName;
   String? phone;
   String? email;
   String? address;
-
+  @Property(type: PropertyType.date)
   DateTime createdAt = DateTime.now();
 }

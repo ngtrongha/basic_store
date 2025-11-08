@@ -1,49 +1,68 @@
-import 'package:isar/isar.dart';
+import '../../objectbox.g.dart';
 
 import '../models/customer.dart';
 import '../services/database_service.dart';
 
 class CustomerRepository {
-  Isar get _isar => DatabaseService.instance.isar;
+  Box<Customer> get _box => DatabaseService.instance.store.box<Customer>();
 
   Future<int> create(Customer customer) async {
-    return _isar.writeTxn(() async => _isar.customers.put(customer));
+    return DatabaseService.instance.runWrite<int>(() => _box.put(customer));
   }
 
   Future<bool> deleteById(int id) async {
-    return _isar.writeTxn(() async => _isar.customers.delete(id));
+    return Future.value(_box.remove(id));
   }
 
   Future<Customer?> getById(int id) async {
-    return _isar.customers.get(id);
+    return Future.value(_box.get(id));
   }
 
   Future<List<Customer>> search({String? query, int limit = 100}) async {
     if (query == null || query.trim().isEmpty) {
-      return _isar.customers.where().limit(limit).findAll();
+      final q = _box.query().build();
+      try {
+        final results = q.find();
+        if (results.length <= limit) return results;
+        return results.take(limit).toList();
+      } finally {
+        q.close();
+      }
     }
     final q = query.trim();
-    return _isar.customers
-        .filter()
-        .nameContains(q, caseSensitive: false)
-        .or()
-        .phoneEqualTo(q, caseSensitive: false)
-        .or()
-        .emailEqualTo(q, caseSensitive: false)
-        .limit(limit)
-        .findAll();
+    final condition =
+        Customer_.name.contains(q, caseSensitive: false) |
+        Customer_.phone.equals(q, caseSensitive: false) |
+        Customer_.email.equals(q, caseSensitive: false);
+    final queryBuilt = _box.query(condition).build();
+    try {
+      final results = queryBuilt.find();
+      if (results.length <= limit) return results;
+      return results.take(limit).toList();
+    } finally {
+      queryBuilt.close();
+    }
   }
 
   Future<void> addPoints(int customerId, int points) async {
-    await _isar.writeTxn(() async {
-      final c = await _isar.customers.get(customerId);
-      if (c == null) return;
-      c.points = c.points + points;
-      await _isar.customers.put(c);
+    await DatabaseService.instance.runWriteVoid(() {
+      final customer = _box.get(customerId);
+      if (customer == null) {
+        return;
+      }
+      customer.points = customer.points + points;
+      _box.put(customer);
     });
   }
 
   Future<List<Customer>> getAll({int limit = 1000}) async {
-    return _isar.customers.where().limit(limit).findAll();
+    final query = _box.query().build();
+    try {
+      final results = query.find();
+      if (results.length <= limit) return results;
+      return results.take(limit).toList();
+    } finally {
+      query.close();
+    }
   }
 }

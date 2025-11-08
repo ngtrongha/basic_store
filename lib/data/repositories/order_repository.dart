@@ -1,33 +1,47 @@
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart' as ob;
 
-import '../models/order.dart';
+import '../../objectbox.g.dart';
+import '../models/order.dart' as model;
 import '../services/database_service.dart';
 
 class OrderRepository {
-  Isar get _isar => DatabaseService.instance.isar;
+  ob.Box<model.Order> get _box =>
+      DatabaseService.instance.store.box<model.Order>();
 
-  Future<int> create(Order order) async {
-    return _isar.writeTxn(() async {
-      return await _isar.orders.put(order);
-    });
+  Future<int> create(model.Order order) async {
+    return DatabaseService.instance.runWrite<int>(() => _box.put(order));
   }
 
-  Future<Order?> getById(int id) async {
-    return await _isar.orders.get(id);
+  Future<model.Order?> getById(int id) async {
+    return Future.value(_box.get(id));
   }
 
-  Future<List<Order>> getAll({int offset = 0, int limit = 50}) async {
-    return await _isar.orders.where().offset(offset).limit(limit).findAll();
+  Future<List<model.Order>> getAll({int offset = 0, int limit = 50}) async {
+    final query = _box.query().build();
+    try {
+      final results = query.find();
+      if (offset >= results.length) return <model.Order>[];
+      return results.skip(offset).take(limit).toList();
+    } finally {
+      query.close();
+    }
   }
 
-  Future<List<Order>> getByDateRange(
+  Future<List<model.Order>> getByDateRange(
     DateTime startDate,
     DateTime endDate,
   ) async {
-    return await _isar.orders
-        .filter()
-        .createdAtBetween(startDate, endDate)
-        .sortByCreatedAtDesc()
-        .findAll();
+    final builder = _box.query(
+      Order_.createdAt.between(
+        startDate.millisecondsSinceEpoch,
+        endDate.millisecondsSinceEpoch,
+      ),
+    )..order(Order_.createdAt, flags: ob.Order.descending);
+    final query = builder.build();
+    try {
+      return query.find();
+    } finally {
+      query.close();
+    }
   }
 }

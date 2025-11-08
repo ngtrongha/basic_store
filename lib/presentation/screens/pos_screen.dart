@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../l10n/app_localizations.dart';
 
-import '../../logic/cubits/pos_cubit/pos_cubit.dart';
-import '../../logic/cubits/pos_cubit/pos_state.dart';
+import '../../blocs/pos/pos_bloc.dart';
 import '../../data/models/order.dart';
 import '../../data/services/invoice_service.dart';
 import '../../data/repositories/order_repository.dart';
@@ -27,7 +26,7 @@ class PosScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: context.read<PosCubit>(),
+      value: context.read<PosBloc>(),
       child: Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.pos),
@@ -35,7 +34,7 @@ class PosScreen extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.picture_as_pdf),
               onPressed: () async {
-                final state = context.read<PosCubit>().state;
+                final state = context.read<PosBloc>().state;
                 if (state.cartItems.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -74,7 +73,7 @@ class PosScreen extends StatelessWidget {
             ),
           ],
         ),
-        body: BlocBuilder<PosCubit, PosState>(
+        body: BlocBuilder<PosBloc, PosState>(
           builder: (context, state) {
             return Column(
               children: [
@@ -105,7 +104,9 @@ class PosScreen extends StatelessWidget {
                                   return;
                                 }
                                 if (!context.mounted) return;
-                                context.read<PosCubit>().addProduct(p);
+                                context.read<PosBloc>().add(
+                                  PosEvent.addProduct(p),
+                                );
                                 await RecentService.pushRecentSku(p.sku);
                               },
                             ),
@@ -123,7 +124,9 @@ class PosScreen extends StatelessWidget {
                                   result,
                                 );
                                 if (p != null && context.mounted) {
-                                  context.read<PosCubit>().addProduct(p);
+                                  context.read<PosBloc>().add(
+                                    PosEvent.addProduct(p),
+                                  );
                                   await RecentService.pushRecentSku(p.sku);
                                 }
                               }
@@ -144,8 +147,8 @@ class PosScreen extends StatelessWidget {
                                     ? IconButton(
                                         icon: const Icon(Icons.clear),
                                         onPressed: () => context
-                                            .read<PosCubit>()
-                                            .clearCoupon(),
+                                            .read<PosBloc>()
+                                            .add(const PosEvent.clearCoupon()),
                                       )
                                     : null,
                                 border: const OutlineInputBorder(),
@@ -157,7 +160,9 @@ class PosScreen extends StatelessWidget {
                                   ..couponCode = code.trim()
                                   ..type = PromotionType.couponPercent
                                   ..value = 10;
-                                context.read<PosCubit>().applyCoupon(promo);
+                                context.read<PosBloc>().add(
+                                  PosEvent.applyCoupon(promo),
+                                );
                               },
                             ),
                           ),
@@ -186,7 +191,9 @@ class PosScreen extends StatelessWidget {
                             onPressed: () async {
                               final p = await ProductRepository().getBySku(sku);
                               if (p != null && context.mounted) {
-                                context.read<PosCubit>().addProduct(p);
+                                context.read<PosBloc>().add(
+                                  PosEvent.addProduct(p),
+                                );
                                 await RecentService.pushRecentSku(p.sku);
                               }
                             },
@@ -322,7 +329,7 @@ class PosScreen extends StatelessWidget {
                         );
 
                         if (!context.mounted) return;
-                        context.read<PosCubit>().clearCart();
+                        context.read<PosBloc>().add(const PosEvent.clearCart());
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
@@ -343,23 +350,25 @@ class PosScreen extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             // demo: add or increment a product item with id=1 and price=10000
-            final cubit = context.read<PosCubit>();
+            final cubit = context.read<PosBloc>();
             // if item not exists, emulate adding full product object
-            cubit.addProduct(
-              // minimal Product shape: only price/id is used by cubit
-              // in real flow you would pass a Product from repository
-              (() {
-                // lightweight inline Product stand-in
-                // ignore: no_leading_underscores_for_local_identifiers
-                final _p = Product()
-                  ..id = 1
-                  ..name = 'Demo'
-                  ..sku = 'DEMO-1'
-                  ..costPrice = 8000
-                  ..salePrice = 10000
-                  ..stock = 999;
-                return _p;
-              })(),
+            cubit.add(
+              PosEvent.addProduct(
+                // minimal Product shape: only price/id is used by cubit
+                // in real flow you would pass a Product from repository
+                (() {
+                  // lightweight inline Product stand-in
+                  // ignore: no_leading_underscores_for_local_identifiers
+                  final _p = Product()
+                    ..id = 1
+                    ..name = 'Demo'
+                    ..sku = 'DEMO-1'
+                    ..costPrice = 8000
+                    ..salePrice = 10000
+                    ..stock = 999;
+                  return _p;
+                })(),
+              ),
             );
           },
           child: const Icon(Icons.add_shopping_cart),

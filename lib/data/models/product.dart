@@ -1,20 +1,21 @@
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 
-part 'product.g.dart';
 
-@Collection()
+@Entity()
 class Product {
-  Id id = Isar.autoIncrement;
+  @Id()
+  int id = 0;
 
-  late String name;
+  String name = '';
 
-  @Index(unique: true, caseSensitive: false)
-  late String sku;
+  @Index()
+  @Unique()
+  String sku = '';
 
-  late double costPrice;
-  late double salePrice;
-  late int stock;
-  late int lowStockThreshold; // Alert when stock falls below this
+  double costPrice = 0;
+  double salePrice = 0;
+  int stock = 0;
+  int lowStockThreshold = 0; // Alert when stock falls below this
   String? category;
   String? description;
   String? barcode;

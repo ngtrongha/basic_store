@@ -31,7 +31,7 @@ class DataExportService {
   final _auditRepo = AuditLogRepository();
 
   // Export all data to JSON
-  Future<void> exportAllDataToJson() async {
+  Future<File> createFullJsonExportFile() async {
     final timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
     final fileName = 'basic_store_export_$timestamp.json';
 
@@ -42,6 +42,11 @@ class DataExportService {
     final file = File('${dir.path}/$fileName');
     await file.writeAsString(jsonString);
 
+    return file;
+  }
+
+  Future<void> exportAllDataToJson() async {
+    final file = await createFullJsonExportFile();
     await Share.shareXFiles([
       XFile(file.path),
     ], text: 'Basic Store Data Export');
@@ -153,7 +158,7 @@ class DataExportService {
   String _generateProductCsv(List<dynamic> products) {
     final buffer = StringBuffer();
     buffer.writeln(
-      'ID,Tên,SKU,Giá nhập,Giá bán,Tồn kho,Ngưỡng tồn kho thấp,Danh mục,Mô tả,Mã vạch,Trạng thái',
+      'ID,Tên,SKU,Giá nhập,Giá bán,Tồn kho,Ngưỡng tồn kho thấp,Danh mục,Mô tả,Mã vạch',
     );
 
     for (final product in products) {
@@ -169,7 +174,6 @@ class DataExportService {
           _escapeCsv(product.category ?? ''),
           _escapeCsv(product.description ?? ''),
           _escapeCsv(product.barcode ?? ''),
-          product.isActive ? 'Hoạt động' : 'Không hoạt động',
         ].join(','),
       );
     }
@@ -201,7 +205,7 @@ class DataExportService {
 
   String _generateCustomerCsv(List<dynamic> customers) {
     final buffer = StringBuffer();
-    buffer.writeln('ID,Tên,Số điện thoại,Email,Địa chỉ,Điểm tích lũy,Ngày tạo');
+    buffer.writeln('ID,Tên,Số điện thoại,Email,Hạng,Điểm tích lũy');
 
     for (final customer in customers) {
       buffer.writeln(
@@ -210,9 +214,8 @@ class DataExportService {
           _escapeCsv(customer.name),
           _escapeCsv(customer.phone ?? ''),
           _escapeCsv(customer.email ?? ''),
-          _escapeCsv(customer.address ?? ''),
+          _escapeCsv(customer.tier ?? ''),
           customer.points,
-          DateFormat('yyyy-MM-dd HH:mm:ss').format(customer.createdAt),
         ].join(','),
       );
     }
@@ -266,18 +269,18 @@ class DataExportService {
 
   String _generateSupplierCsv(List<dynamic> suppliers) {
     final buffer = StringBuffer();
-    buffer.writeln('ID,Tên,Liên hệ,Địa chỉ,Số điện thoại,Email,Trạng thái');
+    buffer.writeln('ID,Tên,Người liên hệ,Địa chỉ,Số điện thoại,Email,Ngày tạo');
 
     for (final supplier in suppliers) {
       buffer.writeln(
         [
           supplier.id,
           _escapeCsv(supplier.name),
-          _escapeCsv(supplier.contact ?? ''),
+          _escapeCsv(supplier.contactName ?? ''),
           _escapeCsv(supplier.address ?? ''),
           _escapeCsv(supplier.phone ?? ''),
           _escapeCsv(supplier.email ?? ''),
-          supplier.isActive ? 'Hoạt động' : 'Không hoạt động',
+          DateFormat('yyyy-MM-dd HH:mm:ss').format(supplier.createdAt),
         ].join(','),
       );
     }
@@ -294,7 +297,7 @@ class DataExportService {
         [
           payment.id,
           payment.orderId,
-          _escapeCsv(payment.method),
+          _escapeCsv(payment.method.name),
           payment.amount,
           DateFormat('yyyy-MM-dd HH:mm:ss').format(payment.createdAt),
         ].join(','),
@@ -356,7 +359,6 @@ class DataExportService {
     'category': product.category,
     'description': product.description,
     'barcode': product.barcode,
-    'isActive': product.isActive,
   };
 
   Map<String, dynamic> _orderToMap(dynamic order) => {
@@ -371,8 +373,8 @@ class DataExportService {
           (item) => {
             'productId': item.productId,
             'quantity': item.quantity,
-            'unitPrice': item.unitPrice,
-            'totalPrice': item.totalPrice,
+            'price': item.price,
+            'lineTotal': item.price * item.quantity,
           },
         )
         .toList(),
@@ -383,34 +385,33 @@ class DataExportService {
     'name': customer.name,
     'phone': customer.phone,
     'email': customer.email,
-    'address': customer.address,
+    'tier': customer.tier,
     'points': customer.points,
-    'createdAt': customer.createdAt.toIso8601String(),
   };
 
   Map<String, dynamic> _supplierToMap(dynamic supplier) => {
     'id': supplier.id,
     'name': supplier.name,
-    'contact': supplier.contact,
+    'contactName': supplier.contactName,
     'address': supplier.address,
     'phone': supplier.phone,
     'email': supplier.email,
-    'isActive': supplier.isActive,
+    'createdAt': supplier.createdAt.toIso8601String(),
   };
 
   Map<String, dynamic> _paymentToMap(dynamic payment) => {
     'id': payment.id,
     'orderId': payment.orderId,
-    'method': payment.method,
+    'method': payment.method.name,
     'amount': payment.amount,
     'createdAt': payment.createdAt.toIso8601String(),
   };
 
   Map<String, dynamic> _returnToMap(dynamic return_) => {
     'id': return_.id,
-    'orderId': return_.orderId,
+    'originalOrderId': return_.originalOrderId,
     'customerId': return_.customerId,
-    'totalAmount': return_.totalAmount,
+    'refundAmount': return_.refundAmount,
     'reason': return_.reason.toString(),
     'notes': return_.notes,
     'createdAt': return_.createdAt.toIso8601String(),
@@ -419,8 +420,8 @@ class DataExportService {
           (item) => {
             'productId': item.productId,
             'quantity': item.quantity,
-            'unitPrice': item.unitPrice,
-            'totalPrice': item.totalPrice,
+            'price': item.price,
+            'reason': item.reason,
           },
         )
         .toList(),
@@ -440,18 +441,14 @@ class DataExportService {
   Map<String, dynamic> _purchaseOrderToMap(dynamic po) => {
     'id': po.id,
     'supplierId': po.supplierId,
-    'orderDate': po.orderDate.toIso8601String(),
-    'expectedDelivery': po.expectedDelivery?.toIso8601String(),
+    'createdAt': po.createdAt.toIso8601String(),
     'status': po.status,
-    'totalAmount': po.totalAmount,
-    'notes': po.notes,
     'items': po.items
         .map(
           (item) => {
             'productId': item.productId,
             'quantity': item.quantity,
             'unitPrice': item.unitPrice,
-            'totalPrice': item.totalPrice,
           },
         )
         .toList(),
@@ -459,9 +456,9 @@ class DataExportService {
 
   Map<String, dynamic> _goodsReceiptToMap(dynamic gr) => {
     'id': gr.id,
+    'supplierId': gr.supplierId,
     'purchaseOrderId': gr.purchaseOrderId,
-    'receivedDate': gr.receivedDate.toIso8601String(),
-    'receivedBy': gr.receivedBy,
+    'receivedAt': gr.receivedAt.toIso8601String(),
     'notes': gr.notes,
     'items': gr.items
         .map(
@@ -469,7 +466,6 @@ class DataExportService {
             'productId': item.productId,
             'quantity': item.quantity,
             'unitPrice': item.unitPrice,
-            'totalPrice': item.totalPrice,
           },
         )
         .toList(),

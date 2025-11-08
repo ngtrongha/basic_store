@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'data/services/database_service.dart';
-import 'logic/cubits/pos_cubit/pos_cubit.dart';
+import 'blocs/pos/pos_bloc.dart';
 import 'presentation/screens/product_list_screen.dart';
 import 'presentation/screens/pos_screen.dart';
 import 'presentation/screens/order_history_screen.dart';
@@ -19,6 +19,7 @@ import 'presentation/screens/stores_screen.dart';
 import 'presentation/screens/stock_transfers_screen.dart';
 import 'presentation/screens/advanced_reports_screen.dart';
 import 'presentation/screens/data_export_screen.dart';
+import 'presentation/screens/scanner_screen.dart';
 import 'data/services/auth_service.dart';
 import 'data/services/settings_service.dart';
 import 'data/services/locale_service.dart';
@@ -54,7 +55,7 @@ class BasicStoreApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => PosCubit())],
+      providers: [BlocProvider(create: (_) => PosBloc())],
       child: MaterialApp(
         title: 'Basic Store',
         locale: locale,
@@ -93,6 +94,7 @@ class BasicStoreApp extends StatelessWidget {
           '/pos': (_) => const PosScreen(),
           '/orders': (_) => const OrderHistoryScreen(),
           '/settings': (_) => const SettingsScreen(),
+          '/scanner': (_) => const ScannerScreen(),
         },
       ),
     );

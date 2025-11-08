@@ -1,36 +1,47 @@
-import 'package:isar/isar.dart';
+import '../../objectbox.g.dart';
 import '../models/product_variant.dart';
 import '../services/database_service.dart';
 
 class ProductVariantRepository {
-  final Isar _isar = DatabaseService.instance.isar;
+  Box<ProductVariant> get _box =>
+      DatabaseService.instance.store.box<ProductVariant>();
 
   Future<int> create(ProductVariant variant) async {
-    return _isar.writeTxn(() => _isar.productVariants.put(variant));
+    return DatabaseService.instance.runWrite<int>(() => _box.put(variant));
   }
 
   Future<void> upsert(ProductVariant variant) async {
-    await _isar.writeTxn(() => _isar.productVariants.put(variant));
+    await DatabaseService.instance.runWrite<int>(() => _box.put(variant));
   }
 
   Future<ProductVariant?> getById(int id) async {
-    return _isar.productVariants.get(id);
+    return Future.value(_box.get(id));
   }
 
   Future<List<ProductVariant>> getByProduct(int productId) async {
-    return _isar.productVariants.filter().productIdEqualTo(productId).findAll();
+    final builder = _box.query(ProductVariant_.productId.equals(productId));
+    final query = builder.build();
+    try {
+      return query.find();
+    } finally {
+      query.close();
+    }
   }
 
   Future<List<ProductVariant>> getActiveByProduct(int productId) async {
-    return _isar.productVariants
-        .filter()
-        .productIdEqualTo(productId)
-        .and()
-        .isActiveEqualTo(true)
-        .findAll();
+    final condition =
+        ProductVariant_.productId.equals(productId) &
+        ProductVariant_.isActive.equals(true);
+    final builder = _box.query(condition);
+    final query = builder.build();
+    try {
+      return query.find();
+    } finally {
+      query.close();
+    }
   }
 
   Future<bool> delete(int id) async {
-    return _isar.writeTxn(() => _isar.productVariants.delete(id));
+    return Future.value(_box.remove(id));
   }
 }

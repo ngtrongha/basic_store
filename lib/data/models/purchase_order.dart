@@ -1,23 +1,60 @@
-import 'package:isar/isar.dart';
+import 'dart:convert';
 
-part 'purchase_order.g.dart';
+import 'package:objectbox/objectbox.dart';
 
-@Collection()
+
+@Entity()
 class PurchaseOrder {
-  Id id = Isar.autoIncrement;
+  @Id()
+  int id = 0;
 
   @Index()
-  late int supplierId;
+  int supplierId = 0;
 
-  late DateTime createdAt;
+  @Property(type: PropertyType.date)
+  DateTime createdAt = DateTime.now();
   String status = 'open'; // open, received, cancelled
 
-  late List<PurchaseOrderItem> items;
+  String itemsJson = '[]';
+
+  @Transient()
+  List<PurchaseOrderItem> get items => _itemsCache ??= _decodeItems(itemsJson);
+
+  set items(List<PurchaseOrderItem> value) {
+    _itemsCache = value;
+    itemsJson = jsonEncode(value.map((e) => e.toJson()).toList());
+  }
+
+  @Transient()
+  List<PurchaseOrderItem>? _itemsCache;
 }
 
-@embedded
 class PurchaseOrderItem {
-  late int productId;
-  late int quantity;
-  late double unitCost;
+  int productId = 0;
+  int quantity = 0;
+  double unitCost = 0;
+
+  Map<String, dynamic> toJson() => {
+    'productId': productId,
+    'quantity': quantity,
+    'unitCost': unitCost,
+  };
+
+  static PurchaseOrderItem fromJson(Map<String, dynamic> json) {
+    return PurchaseOrderItem()
+      ..productId = json['productId'] as int? ?? 0
+      ..quantity = json['quantity'] as int? ?? 0
+      ..unitCost = (json['unitCost'] as num?)?.toDouble() ?? 0;
+  }
+}
+
+List<PurchaseOrderItem> _decodeItems(String value) {
+  if (value.isEmpty) return <PurchaseOrderItem>[];
+  final decoded = jsonDecode(value);
+  if (decoded is! List) return <PurchaseOrderItem>[];
+  return decoded
+      .map(
+        (e) => PurchaseOrderItem.fromJson(Map<String, dynamic>.from(e as Map)),
+      )
+      .toList();
 }

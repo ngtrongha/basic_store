@@ -1,41 +1,58 @@
-import 'package:isar/isar.dart';
+import '../../objectbox.g.dart';
 import '../models/product_price.dart';
 import '../services/database_service.dart';
 
 class ProductPriceRepository {
-  final Isar _isar = DatabaseService.instance.isar;
+  Box<ProductPrice> get _box =>
+      DatabaseService.instance.store.box<ProductPrice>();
 
   Future<int> create(ProductPrice price) async {
-    return _isar.writeTxn(() => _isar.productPrices.put(price));
+    return DatabaseService.instance.runWrite<int>(() => _box.put(price));
   }
 
   Future<ProductPrice?> getById(int id) async {
-    return _isar.productPrices.get(id);
+    return Future.value(_box.get(id));
   }
 
   Future<List<ProductPrice>> getByProduct(int productId) async {
-    return _isar.productPrices.filter().productIdEqualTo(productId).findAll();
+    final builder = _box.query(ProductPrice_.productId.equals(productId));
+    final query = builder.build();
+    try {
+      return query.find();
+    } finally {
+      query.close();
+    }
   }
 
   Future<List<ProductPrice>> getByStore(int storeId) async {
-    return _isar.productPrices.filter().storeIdEqualTo(storeId).findAll();
+    final builder = _box.query(ProductPrice_.storeId.equals(storeId));
+    final query = builder.build();
+    try {
+      return query.find();
+    } finally {
+      query.close();
+    }
   }
 
   Future<ProductPrice?> getCurrentPrice(int productId, int storeId) async {
-    return _isar.productPrices
-        .filter()
-        .productIdEqualTo(productId)
-        .and()
-        .storeIdEqualTo(storeId)
-        .sortByCreatedAtDesc()
-        .findFirst();
+    final condition =
+        ProductPrice_.productId.equals(productId) &
+        ProductPrice_.storeId.equals(storeId);
+    final builder = _box.query(condition)
+      ..order(ProductPrice_.createdAt, flags: Order.descending);
+    final query = builder.build();
+    try {
+      return query.findFirst();
+    } finally {
+      query.close();
+    }
   }
 
   Future<void> update(ProductPrice price) async {
-    await _isar.writeTxn(() => _isar.productPrices.put(price));
+    await DatabaseService.instance.runWrite<int>(() => _box.put(price));
   }
 
   Future<bool> delete(int id) async {
-    return _isar.writeTxn(() => _isar.productPrices.delete(id));
+    return Future.value(_box.remove(id));
   }
 }

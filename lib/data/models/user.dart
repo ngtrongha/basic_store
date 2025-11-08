@@ -1,21 +1,28 @@
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 
-part 'user.g.dart';
 
 enum UserRole { admin, manager, cashier }
 
-@Collection()
+@Entity()
 class AppUser {
-  Id id = Isar.autoIncrement;
+  @Id()
+  int id = 0;
 
-  @Index(unique: true, caseSensitive: false)
-  late String username;
+  @Index()
+  @Unique(onConflict: ConflictStrategy.replace)
+  String username = '';
 
   // For demo only; in production store salted hash
-  late String password;
+  String password = '';
 
-  @enumerated
-  late UserRole role;
+  @Property(type: PropertyType.byte)
+  int roleValue = UserRole.admin.index;
 
+  @Transient()
+  UserRole get role => UserRole.values[roleValue];
+
+  set role(UserRole value) => roleValue = value.index;
+
+  @Property(type: PropertyType.date)
   DateTime createdAt = DateTime.now();
 }

@@ -26,8 +26,7 @@ class AuthService {
     final prefs = await SharedPreferences.getInstance();
     final id = prefs.getInt(_currentUserIdKey);
     if (id == null) return null;
-    final list = await _users.getAll(limit: 1000);
-    return list.firstWhere((u) => u.id == id, orElse: () => AppUser());
+    return _users.getById(id);
   }
 
   Future<bool> hasRole(UserRole role) async {

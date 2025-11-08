@@ -1,17 +1,19 @@
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 
-part 'audit_log.g.dart';
 
-@Collection()
+
+@Entity()
 class AuditLog {
-  Id id = Isar.autoIncrement;
+  @Id()
+  int id = 0;
 
   @Index()
   int? userId;
 
   @Index()
-  late String action; // e.g., CHECKOUT, STOCK_ADJUST, RETURN
+  String action = ''; // e.g., CHECKOUT, STOCK_ADJUST, RETURN
 
   String? details;
+  @Property(type: PropertyType.date)
   DateTime createdAt = DateTime.now();
 }

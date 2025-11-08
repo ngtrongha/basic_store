@@ -4,7 +4,7 @@ import '../../presentation/dialogs/add_product_dialog.dart';
 import '../../data/models/product.dart';
 import 'scanner_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../logic/cubits/pos_cubit/pos_cubit.dart';
+import '../../blocs/pos/pos_bloc.dart';
 import '../widgets/product_search_field.dart';
 import '../../data/services/favorite_service.dart';
 import '../../l10n/app_localizations.dart';
@@ -93,7 +93,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                 return;
               }
               if (!mounted) return;
-              context.read<PosCubit>().addProduct(found);
+              context.read<PosBloc>().add(PosEvent.addProduct(found));
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
@@ -170,7 +170,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                         ),
                         trailing: Text('${p.salePrice.toStringAsFixed(0)} đ'),
                         onTap: () {
-                          context.read<PosCubit>().addProduct(p);
+                          context.read<PosBloc>().add(PosEvent.addProduct(p));
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -203,7 +203,9 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 '${p.salePrice.toStringAsFixed(0)} đ',
                               ),
                               onTap: () {
-                                context.read<PosCubit>().addProduct(p);
+                                context.read<PosBloc>().add(
+                                  PosEvent.addProduct(p),
+                                );
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(

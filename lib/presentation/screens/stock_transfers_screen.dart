@@ -287,7 +287,7 @@ class _TransferDialogState extends State<_TransferDialog> {
             TextField(
               controller: _notesCtrl,
               decoration: InputDecoration(
-                labelText: AppLocalizations.of(context)!.notes ?? 'Notes',
+                labelText: AppLocalizations.of(context)!.notes,
                 border: const OutlineInputBorder(),
               ),
             ),

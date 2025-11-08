@@ -1,18 +1,20 @@
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 
-part 'customer.g.dart';
 
-@Collection()
+@Entity()
 class Customer {
-  Id id = Isar.autoIncrement;
+  @Id()
+  int id = 0;
 
-  @Index(caseSensitive: false)
-  late String name;
+  @Index()
+  String name = '';
 
-  @Index(unique: true, caseSensitive: false, replace: true)
+  @Index()
+  @Unique(onConflict: ConflictStrategy.replace)
   String? phone;
 
-  @Index(unique: true, caseSensitive: false, replace: true)
+  @Index()
+  @Unique()
   String? email;
 
   String? tier; // e.g., Bronze/Silver/Gold

@@ -37,10 +37,10 @@ class PurchasingService {
           : ((existingQty * existingCost) + (it.quantity * it.unitCost)) /
                 newQty;
 
-      // Update product cost and stock
-      product.costPrice = newCost;
-      await _productRepo.updateStock(productId: product.id, delta: it.quantity);
-      // Persist cost change
+      // Update product cost and stock in a single write
+      product
+        ..costPrice = newCost
+        ..stock = newQty;
       await _productRepo.create(product);
     }
 

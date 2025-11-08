@@ -1,13 +1,13 @@
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 
-part 'product_variant.g.dart';
 
-@Collection()
+@Entity()
 class ProductVariant {
-  Id id = Isar.autoIncrement;
+  @Id()
+  int id = 0;
 
   @Index()
-  late int productId;
+  int productId = 0;
 
   // Simple attributes for common cases
   String? size;
@@ -23,5 +23,6 @@ class ProductVariant {
   int stock = 0;
 
   bool isActive = true;
+  @Property(type: PropertyType.date)
   DateTime createdAt = DateTime.now();
 }

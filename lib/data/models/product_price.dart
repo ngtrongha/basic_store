@@ -1,15 +1,18 @@
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 
-part 'product_price.g.dart';
 
-@Collection()
+@Entity()
 class ProductPrice {
-  Id id = Isar.autoIncrement;
+  @Id()
+  int id = 0;
 
-  late int productId;
-  late int storeId;
-  late double price;
+  int productId = 0;
+  int storeId = 0;
+  double price = 0;
+  @Property(type: PropertyType.date)
   DateTime createdAt = DateTime.now();
+  @Property(type: PropertyType.date)
   DateTime? validFrom;
+  @Property(type: PropertyType.date)
   DateTime? validTo;
 }

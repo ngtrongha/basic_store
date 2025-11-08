@@ -1,43 +1,53 @@
-import 'package:isar/isar.dart';
+import '../../objectbox.g.dart';
 
 import '../models/product.dart';
 import '../services/database_service.dart';
 
 class ProductRepository {
-  Isar get _isar => DatabaseService.instance.isar;
+  Box<Product> get _box => DatabaseService.instance.store.box<Product>();
 
   Future<int> create(Product product) async {
-    return _isar.writeTxn(() async {
-      return await _isar.products.put(product);
-    });
+    return DatabaseService.instance.runWrite<int>(() => _box.put(product));
   }
 
   Future<Product?> getById(int id) async {
-    return await _isar.products.get(id);
+    return Future.value(_box.get(id));
   }
 
   Future<Product?> getBySku(String sku) async {
-    return await _isar.products.filter().skuEqualTo(sku, caseSensitive: false).findFirst();
+    final query = _box
+        .query(Product_.sku.equals(sku, caseSensitive: false))
+        .build();
+    try {
+      return query.findFirst();
+    } finally {
+      query.close();
+    }
   }
 
   Future<List<Product>> getAll({int offset = 0, int limit = 50}) async {
-    return await _isar.products.where().offset(offset).limit(limit).findAll();
+    final query = _box.query().build();
+    try {
+      final results = query.find();
+      if (offset >= results.length) return <Product>[];
+      return results.skip(offset).take(limit).toList();
+    } finally {
+      query.close();
+    }
   }
 
   Future<bool> deleteById(int id) async {
-    return _isar.writeTxn(() async {
-      return await _isar.products.delete(id);
-    });
+    return Future.value(_box.remove(id));
   }
 
   Future<void> updateStock({required int productId, required int delta}) async {
-    await _isar.writeTxn(() async {
-      final product = await _isar.products.get(productId);
-      if (product == null) return;
+    await DatabaseService.instance.runWriteVoid(() {
+      final product = _box.get(productId);
+      if (product == null) {
+        return;
+      }
       product.stock = product.stock + delta;
-      await _isar.products.put(product);
+      _box.put(product);
     });
   }
 }
-
-

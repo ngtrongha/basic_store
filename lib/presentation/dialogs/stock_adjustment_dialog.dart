@@ -95,7 +95,7 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
             DropdownButtonFormField<AdjustmentReason>(
               value: _selectedReason,
               decoration: InputDecoration(
-                labelText: AppLocalizations.of(context)!.reason ?? 'Reason',
+                labelText: AppLocalizations.of(context)!.reason,
                 border: const OutlineInputBorder(),
               ),
               items: AdjustmentReason.values.map((reason) {
@@ -150,7 +150,7 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
             TextField(
               controller: _notesCtrl,
               decoration: InputDecoration(
-                labelText: AppLocalizations.of(context)!.notes ?? 'Notes',
+                labelText: AppLocalizations.of(context)!.notes,
                 border: const OutlineInputBorder(),
               ),
               maxLines: 2,

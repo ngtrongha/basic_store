@@ -1,6 +1,5 @@
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 
-part 'stock_adjustment.g.dart';
 
 enum AdjustmentReason {
   manual,
@@ -13,15 +12,18 @@ enum AdjustmentReason {
   other,
 }
 
-@Collection()
+@Entity()
 class StockAdjustment {
-  Id id = Isar.autoIncrement;
+  @Id()
+  int id = 0;
 
-  late int productId;
-  late int delta; // positive for increase, negative for decrease
-  late String reason;
-  late String notes;
-  late DateTime createdAt;
+  int productId = 0;
+  int delta = 0; // positive for increase, negative for decrease
+  String reason = '';
+  String notes = '';
+  @Property(type: PropertyType.date)
+  DateTime createdAt = DateTime.now();
   String? batchNumber;
+  @Property(type: PropertyType.date)
   DateTime? expiryDate;
 }

@@ -1,15 +1,16 @@
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 
-part 'store.g.dart';
 
-@Collection()
+@Entity()
 class Store {
-  Id id = Isar.autoIncrement;
+  @Id()
+  int id = 0;
 
-  late String name;
-  late String address;
+  String name = '';
+  String address = '';
   String? phone;
   String? email;
   bool isActive = true;
+  @Property(type: PropertyType.date)
   DateTime createdAt = DateTime.now();
 }

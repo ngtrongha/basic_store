@@ -1,20 +1,24 @@
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 
-part 'payment.g.dart';
 
 enum PaymentMethod { cash, card, ewallet }
 
-@Collection()
+@Entity()
 class Payment {
-  Id id = Isar.autoIncrement;
+  @Id()
+  int id = 0;
 
   @Index()
-  late int orderId;
+  int orderId = 0;
 
-  @enumerated
-  late PaymentMethod method;
+  @Property(type: PropertyType.byte)
+  int methodValue = PaymentMethod.cash.index;
 
-  late double amount;
-
+  @Transient()
+  PaymentMethod get method => PaymentMethod.values[methodValue];
+  set method(PaymentMethod value) => methodValue = value.index;
+  double value = 0; // percent or amount depending on type
+  double amount = 0;
+  @Property(type: PropertyType.date)
   DateTime createdAt = DateTime.now();
 }

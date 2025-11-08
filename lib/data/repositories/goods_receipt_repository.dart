@@ -1,27 +1,35 @@
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 import '../models/goods_receipt.dart';
 import '../services/database_service.dart';
 
 class GoodsReceiptRepository {
-  final Isar _isar = DatabaseService.instance.isar;
+  Box<GoodsReceipt> get _box =>
+      DatabaseService.instance.store.box<GoodsReceipt>();
 
   Future<int> create(GoodsReceipt receipt) async {
-    return _isar.writeTxn(() => _isar.goodsReceipts.put(receipt));
+    return DatabaseService.instance.runWrite<int>(() => _box.put(receipt));
   }
 
   Future<GoodsReceipt?> getById(int id) async {
-    return _isar.goodsReceipts.get(id);
+    return Future.value(_box.get(id));
   }
 
   Future<List<GoodsReceipt>> getAll({int limit = 1000}) async {
-    return _isar.goodsReceipts.where().limit(limit).findAll();
+    final query = _box.query().build();
+    try {
+      final results = query.find();
+      if (results.length <= limit) return results;
+      return results.take(limit).toList();
+    } finally {
+      query.close();
+    }
   }
 
   Future<void> update(GoodsReceipt receipt) async {
-    await _isar.writeTxn(() => _isar.goodsReceipts.put(receipt));
+    await DatabaseService.instance.runWrite<int>(() => _box.put(receipt));
   }
 
   Future<bool> delete(int id) async {
-    return _isar.writeTxn(() => _isar.goodsReceipts.delete(id));
+    return Future.value(_box.remove(id));
   }
 }

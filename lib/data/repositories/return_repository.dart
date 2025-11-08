@@ -1,35 +1,57 @@
-import 'package:isar/isar.dart';
+import '../../objectbox.g.dart';
 import '../models/return.dart';
 import '../services/database_service.dart';
 
 class ReturnRepository {
-  final Isar _isar = DatabaseService.instance.isar;
+  Box<Return> get _box => DatabaseService.instance.store.box<Return>();
 
   Future<int> create(Return return_) async {
-    return _isar.writeTxn(() => _isar.returns.put(return_));
+    return DatabaseService.instance.runWrite<int>(() => _box.put(return_));
   }
 
   Future<Return?> getById(int id) async {
-    return _isar.returns.get(id);
+    return Future.value(_box.get(id));
   }
 
   Future<List<Return>> getAll({int limit = 1000}) async {
-    return _isar.returns.where().limit(limit).findAll();
+    final query = _box.query().build();
+    try {
+      final results = query.find();
+      if (results.length <= limit) return results;
+      return results.take(limit).toList();
+    } finally {
+      query.close();
+    }
   }
 
   Future<void> update(Return return_) async {
-    await _isar.writeTxn(() => _isar.returns.put(return_));
+    await DatabaseService.instance
+        .runWrite<int>(() => _box.put(return_));
   }
 
   Future<bool> delete(int id) async {
-    return _isar.writeTxn(() => _isar.returns.delete(id));
+    return Future.value(_box.remove(id));
   }
 
   Future<List<Return>> getByOrderId(int orderId) async {
-    return _isar.returns.where().findAll();
+    final builder =
+        _box.query(Return_.originalOrderId.equals(orderId));
+    final query = builder.build();
+    try {
+      return query.find();
+    } finally {
+      query.close();
+    }
   }
 
   Future<List<Return>> getByCustomerId(int customerId) async {
-    return _isar.returns.filter().customerIdEqualTo(customerId).findAll();
+    final builder =
+        _box.query(Return_.customerId.equals(customerId));
+    final query = builder.build();
+    try {
+      return query.find();
+    } finally {
+      query.close();
+    }
   }
 }

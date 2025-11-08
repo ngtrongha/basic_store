@@ -1,38 +1,54 @@
-import 'package:isar/isar.dart';
+import '../../objectbox.g.dart';
 import '../models/stock_adjustment.dart';
 import '../services/database_service.dart';
 
 class StockAdjustmentRepository {
-  final Isar _isar = DatabaseService.instance.isar;
+  Box<StockAdjustment> get _box =>
+      DatabaseService.instance.store.box<StockAdjustment>();
 
   Future<int> create(StockAdjustment adjustment) async {
-    return _isar.writeTxn(() => _isar.stockAdjustments.put(adjustment));
+    return DatabaseService.instance.runWrite<int>(() => _box.put(adjustment));
   }
 
   Future<StockAdjustment?> getById(int id) async {
-    return _isar.stockAdjustments.get(id);
+    return Future.value(_box.get(id));
   }
 
   Future<List<StockAdjustment>> getAll({int limit = 1000}) async {
-    return _isar.stockAdjustments.where().limit(limit).findAll();
+    final query = _box.query().build();
+    try {
+      final results = query.find();
+      if (results.length <= limit) return results;
+      return results.take(limit).toList();
+    } finally {
+      query.close();
+    }
   }
 
   Future<void> update(StockAdjustment adjustment) async {
-    await _isar.writeTxn(() => _isar.stockAdjustments.put(adjustment));
+    await DatabaseService.instance.runWrite<int>(() => _box.put(adjustment));
   }
 
   Future<bool> delete(int id) async {
-    return _isar.writeTxn(() => _isar.stockAdjustments.delete(id));
+    return Future.value(_box.remove(id));
   }
 
   Future<List<StockAdjustment>> getByProductId(int productId) async {
-    return _isar.stockAdjustments
-        .filter()
-        .productIdEqualTo(productId)
-        .findAll();
+    final builder = _box.query(StockAdjustment_.productId.equals(productId));
+    final query = builder.build();
+    try {
+      return query.find();
+    } finally {
+      query.close();
+    }
   }
 
   Future<List<StockAdjustment>> getExpiringSoon() async {
-    return _isar.stockAdjustments.where().findAll();
+    final query = _box.query().build();
+    try {
+      return query.find();
+    } finally {
+      query.close();
+    }
   }
 }
