@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../data/models/customer.dart';
 import '../../data/models/order.dart';
 import '../../data/models/promotion.dart';
 
@@ -9,6 +10,7 @@ part 'pos_state.freezed.dart';
 abstract class PosState with _$PosState {
   const factory PosState({
     @Default(<OrderItem>[]) List<OrderItem> cartItems,
+    Customer? selectedCustomer,
     @Default(0.0) double totalAmount,
     String? couponCode,
     Promotion? appliedCoupon,

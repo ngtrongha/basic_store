@@ -63,9 +63,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '623164379206',
     projectId: 'hnmarket',
     storageBucket: 'hnmarket.appspot.com',
-    androidClientId: '623164379206-85dt82rujrsu3lgdu5a91kecqo4l0f7l.apps.googleusercontent.com',
-    iosClientId: '623164379206-jr7dfqkuua1ueppeochom5rskgs5dkrn.apps.googleusercontent.com',
+    androidClientId:
+        '623164379206-85dt82rujrsu3lgdu5a91kecqo4l0f7l.apps.googleusercontent.com',
+    iosClientId:
+        '623164379206-jr7dfqkuua1ueppeochom5rskgs5dkrn.apps.googleusercontent.com',
     iosBundleId: 'com.example.basicStore',
   );
-
 }

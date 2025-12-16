@@ -49,6 +49,27 @@ class ProductRepository {
     return rows.map(_toModel).toList();
   }
 
+  Future<List<Product>> searchByTokens(
+    List<String> tokens, {
+    int limit = 200,
+  }) async {
+    final cleaned = tokens.map((t) => t.trim()).where((t) => t.isNotEmpty);
+    final list = cleaned.toList(growable: false);
+    if (list.isEmpty) return getAll(limit: limit);
+
+    final query = _db.select(_db.products)
+      ..orderBy([(t) => OrderingTerm(expression: t.id)])
+      ..limit(limit);
+
+    for (final token in list) {
+      final pattern = '%$token%';
+      query.where((t) => t.name.like(pattern) | t.sku.like(pattern));
+    }
+
+    final rows = await query.get();
+    return rows.map(_toModel).toList();
+  }
+
   Future<bool> deleteById(int id) async {
     final deleted = await (_db.delete(
       _db.products,

@@ -4,7 +4,11 @@ class CurrencyTextField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
 
-  const CurrencyTextField({super.key, required this.controller, this.label = 'Giá bán'});
+  const CurrencyTextField({
+    super.key,
+    required this.controller,
+    this.label = 'Giá bán',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,5 +23,3 @@ class CurrencyTextField extends StatelessWidget {
     );
   }
 }
-
-

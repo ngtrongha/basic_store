@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../data/models/customer.dart';
 import '../../data/models/order.dart';
 import '../../data/models/product.dart';
 import '../../data/models/promotion.dart';
@@ -13,6 +14,10 @@ final posControllerProvider = NotifierProvider<PosController, PosState>(
 class PosController extends Notifier<PosState> {
   @override
   PosState build() => PosState.initial();
+
+  void setCustomer(Customer? customer) {
+    state = state.copyWith(selectedCustomer: customer);
+  }
 
   Future<void> _recompute({
     required List<OrderItem> items,
@@ -46,6 +51,24 @@ class PosController extends Notifier<PosState> {
       items.add(item);
     } else {
       items[index].quantity = items[index].quantity + 1;
+    }
+
+    await _recompute(items: items, coupon: state.appliedCoupon);
+  }
+
+  Future<void> addProductWithQuantity(Product product, int qtyDelta) async {
+    if (qtyDelta <= 0) return;
+
+    final items = List<OrderItem>.from(state.cartItems);
+    final index = items.indexWhere((e) => e.productId == product.id);
+    if (index == -1) {
+      final item = OrderItem()
+        ..productId = product.id
+        ..quantity = qtyDelta
+        ..price = product.salePrice;
+      items.add(item);
+    } else {
+      items[index].quantity = items[index].quantity + qtyDelta;
     }
 
     await _recompute(items: items, coupon: state.appliedCoupon);

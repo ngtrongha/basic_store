@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PosState {
 
- List<OrderItem> get cartItems; double get totalAmount; String? get couponCode; Promotion? get appliedCoupon; double get subtotal; double get cartDiscount; double get vatAmount; double get serviceFee;
+ List<OrderItem> get cartItems; Customer? get selectedCustomer; double get totalAmount; String? get couponCode; Promotion? get appliedCoupon; double get subtotal; double get cartDiscount; double get vatAmount; double get serviceFee;
 /// Create a copy of PosState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $PosStateCopyWith<PosState> get copyWith => _$PosStateCopyWithImpl<PosState>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PosState&&const DeepCollectionEquality().equals(other.cartItems, cartItems)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.couponCode, couponCode) || other.couponCode == couponCode)&&(identical(other.appliedCoupon, appliedCoupon) || other.appliedCoupon == appliedCoupon)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.cartDiscount, cartDiscount) || other.cartDiscount == cartDiscount)&&(identical(other.vatAmount, vatAmount) || other.vatAmount == vatAmount)&&(identical(other.serviceFee, serviceFee) || other.serviceFee == serviceFee));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PosState&&const DeepCollectionEquality().equals(other.cartItems, cartItems)&&(identical(other.selectedCustomer, selectedCustomer) || other.selectedCustomer == selectedCustomer)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.couponCode, couponCode) || other.couponCode == couponCode)&&(identical(other.appliedCoupon, appliedCoupon) || other.appliedCoupon == appliedCoupon)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.cartDiscount, cartDiscount) || other.cartDiscount == cartDiscount)&&(identical(other.vatAmount, vatAmount) || other.vatAmount == vatAmount)&&(identical(other.serviceFee, serviceFee) || other.serviceFee == serviceFee));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(cartItems),totalAmount,couponCode,appliedCoupon,subtotal,cartDiscount,vatAmount,serviceFee);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(cartItems),selectedCustomer,totalAmount,couponCode,appliedCoupon,subtotal,cartDiscount,vatAmount,serviceFee);
 
 @override
 String toString() {
-  return 'PosState(cartItems: $cartItems, totalAmount: $totalAmount, couponCode: $couponCode, appliedCoupon: $appliedCoupon, subtotal: $subtotal, cartDiscount: $cartDiscount, vatAmount: $vatAmount, serviceFee: $serviceFee)';
+  return 'PosState(cartItems: $cartItems, selectedCustomer: $selectedCustomer, totalAmount: $totalAmount, couponCode: $couponCode, appliedCoupon: $appliedCoupon, subtotal: $subtotal, cartDiscount: $cartDiscount, vatAmount: $vatAmount, serviceFee: $serviceFee)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $PosStateCopyWith<$Res>  {
   factory $PosStateCopyWith(PosState value, $Res Function(PosState) _then) = _$PosStateCopyWithImpl;
 @useResult
 $Res call({
- List<OrderItem> cartItems, double totalAmount, String? couponCode, Promotion? appliedCoupon, double subtotal, double cartDiscount, double vatAmount, double serviceFee
+ List<OrderItem> cartItems, Customer? selectedCustomer, double totalAmount, String? couponCode, Promotion? appliedCoupon, double subtotal, double cartDiscount, double vatAmount, double serviceFee
 });
 
 
@@ -62,10 +62,11 @@ class _$PosStateCopyWithImpl<$Res>
 
 /// Create a copy of PosState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? cartItems = null,Object? totalAmount = null,Object? couponCode = freezed,Object? appliedCoupon = freezed,Object? subtotal = null,Object? cartDiscount = null,Object? vatAmount = null,Object? serviceFee = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? cartItems = null,Object? selectedCustomer = freezed,Object? totalAmount = null,Object? couponCode = freezed,Object? appliedCoupon = freezed,Object? subtotal = null,Object? cartDiscount = null,Object? vatAmount = null,Object? serviceFee = null,}) {
   return _then(_self.copyWith(
 cartItems: null == cartItems ? _self.cartItems : cartItems // ignore: cast_nullable_to_non_nullable
-as List<OrderItem>,totalAmount: null == totalAmount ? _self.totalAmount : totalAmount // ignore: cast_nullable_to_non_nullable
+as List<OrderItem>,selectedCustomer: freezed == selectedCustomer ? _self.selectedCustomer : selectedCustomer // ignore: cast_nullable_to_non_nullable
+as Customer?,totalAmount: null == totalAmount ? _self.totalAmount : totalAmount // ignore: cast_nullable_to_non_nullable
 as double,couponCode: freezed == couponCode ? _self.couponCode : couponCode // ignore: cast_nullable_to_non_nullable
 as String?,appliedCoupon: freezed == appliedCoupon ? _self.appliedCoupon : appliedCoupon // ignore: cast_nullable_to_non_nullable
 as Promotion?,subtotal: null == subtotal ? _self.subtotal : subtotal // ignore: cast_nullable_to_non_nullable
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<OrderItem> cartItems,  double totalAmount,  String? couponCode,  Promotion? appliedCoupon,  double subtotal,  double cartDiscount,  double vatAmount,  double serviceFee)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<OrderItem> cartItems,  Customer? selectedCustomer,  double totalAmount,  String? couponCode,  Promotion? appliedCoupon,  double subtotal,  double cartDiscount,  double vatAmount,  double serviceFee)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PosState() when $default != null:
-return $default(_that.cartItems,_that.totalAmount,_that.couponCode,_that.appliedCoupon,_that.subtotal,_that.cartDiscount,_that.vatAmount,_that.serviceFee);case _:
+return $default(_that.cartItems,_that.selectedCustomer,_that.totalAmount,_that.couponCode,_that.appliedCoupon,_that.subtotal,_that.cartDiscount,_that.vatAmount,_that.serviceFee);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.cartItems,_that.totalAmount,_that.couponCode,_that.applied
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<OrderItem> cartItems,  double totalAmount,  String? couponCode,  Promotion? appliedCoupon,  double subtotal,  double cartDiscount,  double vatAmount,  double serviceFee)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<OrderItem> cartItems,  Customer? selectedCustomer,  double totalAmount,  String? couponCode,  Promotion? appliedCoupon,  double subtotal,  double cartDiscount,  double vatAmount,  double serviceFee)  $default,) {final _that = this;
 switch (_that) {
 case _PosState():
-return $default(_that.cartItems,_that.totalAmount,_that.couponCode,_that.appliedCoupon,_that.subtotal,_that.cartDiscount,_that.vatAmount,_that.serviceFee);case _:
+return $default(_that.cartItems,_that.selectedCustomer,_that.totalAmount,_that.couponCode,_that.appliedCoupon,_that.subtotal,_that.cartDiscount,_that.vatAmount,_that.serviceFee);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.cartItems,_that.totalAmount,_that.couponCode,_that.applied
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<OrderItem> cartItems,  double totalAmount,  String? couponCode,  Promotion? appliedCoupon,  double subtotal,  double cartDiscount,  double vatAmount,  double serviceFee)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<OrderItem> cartItems,  Customer? selectedCustomer,  double totalAmount,  String? couponCode,  Promotion? appliedCoupon,  double subtotal,  double cartDiscount,  double vatAmount,  double serviceFee)?  $default,) {final _that = this;
 switch (_that) {
 case _PosState() when $default != null:
-return $default(_that.cartItems,_that.totalAmount,_that.couponCode,_that.appliedCoupon,_that.subtotal,_that.cartDiscount,_that.vatAmount,_that.serviceFee);case _:
+return $default(_that.cartItems,_that.selectedCustomer,_that.totalAmount,_that.couponCode,_that.appliedCoupon,_that.subtotal,_that.cartDiscount,_that.vatAmount,_that.serviceFee);case _:
   return null;
 
 }
@@ -213,7 +214,7 @@ return $default(_that.cartItems,_that.totalAmount,_that.couponCode,_that.applied
 
 
 class _PosState implements PosState {
-  const _PosState({final  List<OrderItem> cartItems = const <OrderItem>[], this.totalAmount = 0.0, this.couponCode, this.appliedCoupon, this.subtotal = 0.0, this.cartDiscount = 0.0, this.vatAmount = 0.0, this.serviceFee = 0.0}): _cartItems = cartItems;
+  const _PosState({final  List<OrderItem> cartItems = const <OrderItem>[], this.selectedCustomer, this.totalAmount = 0.0, this.couponCode, this.appliedCoupon, this.subtotal = 0.0, this.cartDiscount = 0.0, this.vatAmount = 0.0, this.serviceFee = 0.0}): _cartItems = cartItems;
   
 
  final  List<OrderItem> _cartItems;
@@ -223,6 +224,7 @@ class _PosState implements PosState {
   return EqualUnmodifiableListView(_cartItems);
 }
 
+@override final  Customer? selectedCustomer;
 @override@JsonKey() final  double totalAmount;
 @override final  String? couponCode;
 @override final  Promotion? appliedCoupon;
@@ -241,16 +243,16 @@ _$PosStateCopyWith<_PosState> get copyWith => __$PosStateCopyWithImpl<_PosState>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PosState&&const DeepCollectionEquality().equals(other._cartItems, _cartItems)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.couponCode, couponCode) || other.couponCode == couponCode)&&(identical(other.appliedCoupon, appliedCoupon) || other.appliedCoupon == appliedCoupon)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.cartDiscount, cartDiscount) || other.cartDiscount == cartDiscount)&&(identical(other.vatAmount, vatAmount) || other.vatAmount == vatAmount)&&(identical(other.serviceFee, serviceFee) || other.serviceFee == serviceFee));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PosState&&const DeepCollectionEquality().equals(other._cartItems, _cartItems)&&(identical(other.selectedCustomer, selectedCustomer) || other.selectedCustomer == selectedCustomer)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.couponCode, couponCode) || other.couponCode == couponCode)&&(identical(other.appliedCoupon, appliedCoupon) || other.appliedCoupon == appliedCoupon)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.cartDiscount, cartDiscount) || other.cartDiscount == cartDiscount)&&(identical(other.vatAmount, vatAmount) || other.vatAmount == vatAmount)&&(identical(other.serviceFee, serviceFee) || other.serviceFee == serviceFee));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_cartItems),totalAmount,couponCode,appliedCoupon,subtotal,cartDiscount,vatAmount,serviceFee);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_cartItems),selectedCustomer,totalAmount,couponCode,appliedCoupon,subtotal,cartDiscount,vatAmount,serviceFee);
 
 @override
 String toString() {
-  return 'PosState(cartItems: $cartItems, totalAmount: $totalAmount, couponCode: $couponCode, appliedCoupon: $appliedCoupon, subtotal: $subtotal, cartDiscount: $cartDiscount, vatAmount: $vatAmount, serviceFee: $serviceFee)';
+  return 'PosState(cartItems: $cartItems, selectedCustomer: $selectedCustomer, totalAmount: $totalAmount, couponCode: $couponCode, appliedCoupon: $appliedCoupon, subtotal: $subtotal, cartDiscount: $cartDiscount, vatAmount: $vatAmount, serviceFee: $serviceFee)';
 }
 
 
@@ -261,7 +263,7 @@ abstract mixin class _$PosStateCopyWith<$Res> implements $PosStateCopyWith<$Res>
   factory _$PosStateCopyWith(_PosState value, $Res Function(_PosState) _then) = __$PosStateCopyWithImpl;
 @override @useResult
 $Res call({
- List<OrderItem> cartItems, double totalAmount, String? couponCode, Promotion? appliedCoupon, double subtotal, double cartDiscount, double vatAmount, double serviceFee
+ List<OrderItem> cartItems, Customer? selectedCustomer, double totalAmount, String? couponCode, Promotion? appliedCoupon, double subtotal, double cartDiscount, double vatAmount, double serviceFee
 });
 
 
@@ -278,10 +280,11 @@ class __$PosStateCopyWithImpl<$Res>
 
 /// Create a copy of PosState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? cartItems = null,Object? totalAmount = null,Object? couponCode = freezed,Object? appliedCoupon = freezed,Object? subtotal = null,Object? cartDiscount = null,Object? vatAmount = null,Object? serviceFee = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? cartItems = null,Object? selectedCustomer = freezed,Object? totalAmount = null,Object? couponCode = freezed,Object? appliedCoupon = freezed,Object? subtotal = null,Object? cartDiscount = null,Object? vatAmount = null,Object? serviceFee = null,}) {
   return _then(_PosState(
 cartItems: null == cartItems ? _self._cartItems : cartItems // ignore: cast_nullable_to_non_nullable
-as List<OrderItem>,totalAmount: null == totalAmount ? _self.totalAmount : totalAmount // ignore: cast_nullable_to_non_nullable
+as List<OrderItem>,selectedCustomer: freezed == selectedCustomer ? _self.selectedCustomer : selectedCustomer // ignore: cast_nullable_to_non_nullable
+as Customer?,totalAmount: null == totalAmount ? _self.totalAmount : totalAmount // ignore: cast_nullable_to_non_nullable
 as double,couponCode: freezed == couponCode ? _self.couponCode : couponCode // ignore: cast_nullable_to_non_nullable
 as String?,appliedCoupon: freezed == appliedCoupon ? _self.appliedCoupon : appliedCoupon // ignore: cast_nullable_to_non_nullable
 as Promotion?,subtotal: null == subtotal ? _self.subtotal : subtotal // ignore: cast_nullable_to_non_nullable

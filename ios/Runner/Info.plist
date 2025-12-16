@@ -4,6 +4,10 @@
 <dict>
     <key>NSCameraUsageDescription</key>
     <string>Ứng dụng cần quyền camera để quét mã vạch</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Ứng dụng cần quyền micro để nhập đơn bằng giọng nói</string>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>Ứng dụng cần quyền nhận dạng giọng nói để nhập đơn bằng giọng nói</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
