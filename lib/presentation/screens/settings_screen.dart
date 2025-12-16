@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/services/settings_service.dart';
@@ -5,7 +6,9 @@ import 'dart:io';
 import '../../data/services/backup_service.dart';
 import '../../data/services/locale_service.dart';
 import '../../l10n/app_localizations.dart';
+import '../../router/app_router.dart';
 
+@RoutePage()
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -109,6 +112,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.settings),
         actions: [
+          IconButton(
+            tooltip: 'Logs',
+            icon: const Icon(Icons.bug_report),
+            onPressed: () => context.router.push(const TalkerLogsRoute()),
+          ),
           TextButton(
             onPressed: _saveSettings,
             child: Text(AppLocalizations.of(context)!.save),

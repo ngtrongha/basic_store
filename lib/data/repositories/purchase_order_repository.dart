@@ -1,35 +1,65 @@
-import 'package:objectbox/objectbox.dart';
+import 'package:drift/drift.dart';
+
+import '../db/app_database.dart';
 import '../models/purchase_order.dart';
 import '../services/database_service.dart';
 
 class PurchaseOrderRepository {
-  Box<PurchaseOrder> get _box =>
-      DatabaseService.instance.store.box<PurchaseOrder>();
+  AppDatabase get _db => DatabaseService.instance.db;
 
   Future<int> create(PurchaseOrder order) async {
-    return DatabaseService.instance.runWrite<int>(() => _box.put(order));
+    final companion = PurchaseOrdersCompanion(
+      id: order.id == 0 ? const Value.absent() : Value(order.id),
+      supplierId: Value(order.supplierId),
+      createdAt: Value(order.createdAt),
+      status: Value(order.status),
+      itemsJson: Value(order.itemsJson),
+    );
+    final id = await _db
+        .into(_db.purchaseOrders)
+        .insert(companion, mode: InsertMode.insertOrReplace);
+    order.id = id;
+    return id;
   }
 
   Future<PurchaseOrder?> getById(int id) async {
-    return Future.value(_box.get(id));
+    final row = await (_db.select(
+      _db.purchaseOrders,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
+    return row == null ? null : _toModel(row);
   }
 
   Future<List<PurchaseOrder>> getAll({int limit = 1000}) async {
-    final query = _box.query().build();
-    try {
-      final results = query.find();
-      if (results.length <= limit) return results;
-      return results.take(limit).toList();
-    } finally {
-      query.close();
-    }
+    final rows =
+        await (_db.select(_db.purchaseOrders)
+              ..orderBy([
+                (t) => OrderingTerm(
+                  expression: t.createdAt,
+                  mode: OrderingMode.desc,
+                ),
+              ])
+              ..limit(limit))
+            .get();
+    return rows.map(_toModel).toList();
   }
 
   Future<void> update(PurchaseOrder order) async {
-    await DatabaseService.instance.runWrite<int>(() => _box.put(order));
+    await create(order);
   }
 
   Future<bool> delete(int id) async {
-    return Future.value(_box.remove(id));
+    final deleted = await (_db.delete(
+      _db.purchaseOrders,
+    )..where((t) => t.id.equals(id))).go();
+    return deleted > 0;
+  }
+
+  PurchaseOrder _toModel(PurchaseOrderRow row) {
+    return PurchaseOrder()
+      ..id = row.id
+      ..supplierId = row.supplierId
+      ..createdAt = row.createdAt
+      ..status = row.status
+      ..itemsJson = row.itemsJson;
   }
 }

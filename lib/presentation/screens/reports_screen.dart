@@ -1,11 +1,15 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:cristalyse/cristalyse.dart';
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../data/models/product.dart';
 import '../../data/services/reporting_service.dart';
 import '../../data/services/auth_service.dart';
 import '../../data/models/user.dart';
 
+@RoutePage()
 class ReportsScreen extends StatefulWidget {
   const ReportsScreen({super.key});
 
@@ -243,6 +247,32 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             ),
                           ),
                           const SizedBox(height: 16),
+                          if (_topProducts.isNotEmpty) ...[
+                            SizedBox(
+                              height: 220,
+                              child: CristalyseChart()
+                                  .data(
+                                    _topProducts.map((item) {
+                                      final product =
+                                          item['product'] as Product;
+                                      return {
+                                        'sku': product.sku,
+                                        'revenue':
+                                            (item['revenue'] as num?)
+                                                ?.toDouble() ??
+                                            0.0,
+                                      };
+                                    }).toList(),
+                                  )
+                                  .mapping(x: 'sku', y: 'revenue')
+                                  .geomBar()
+                                  .scaleXOrdinal()
+                                  .scaleYContinuous(title: 'Doanh thu')
+                                  .theme(ChartTheme.defaultTheme())
+                                  .build(),
+                            ),
+                            const SizedBox(height: 16),
+                          ],
                           ..._topProducts.map((item) {
                             final product = item['product'];
                             return ListTile(

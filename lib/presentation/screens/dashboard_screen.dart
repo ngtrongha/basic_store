@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -6,7 +7,9 @@ import '../../data/repositories/order_repository.dart';
 import '../../data/services/inventory_service.dart';
 import '../../data/services/auth_service.dart';
 import '../../data/models/user.dart';
+import '../../router/app_router.dart';
 
+@RoutePage()
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -69,7 +72,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   if (value == 'logout') {
                     await _authService.logout();
                     if (mounted) {
-                      Navigator.of(context).pushReplacementNamed('/login');
+                      context.router.replaceAll([const LoginRoute()]);
                     }
                   }
                 },
@@ -90,50 +93,49 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.inventory),
-            onPressed: () => Navigator.of(context).pushNamed('/products'),
+            onPressed: () => context.router.push(const ProductListRoute()),
           ),
           IconButton(
             icon: const Icon(Icons.local_shipping),
-            onPressed: () => Navigator.of(context).pushNamed('/suppliers'),
+            onPressed: () => context.router.push(const SuppliersRoute()),
           ),
           IconButton(
             icon: const Icon(Icons.warehouse),
-            onPressed: () => Navigator.of(context).pushNamed('/inventory'),
+            onPressed: () => context.router.push(const InventoryRoute()),
           ),
           IconButton(
             icon: const Icon(Icons.analytics),
-            onPressed: () => Navigator.of(context).pushNamed('/reports'),
+            onPressed: () => context.router.push(const ReportsRoute()),
           ),
           IconButton(
             icon: const Icon(Icons.assessment),
-            onPressed: () =>
-                Navigator.of(context).pushNamed('/advanced-reports'),
+            onPressed: () => context.router.push(const AdvancedReportsRoute()),
             tooltip: 'Báo cáo nâng cao',
           ),
           IconButton(
             icon: const Icon(Icons.file_download),
-            onPressed: () => Navigator.of(context).pushNamed('/data-export'),
+            onPressed: () => context.router.push(const DataExportRoute()),
             tooltip: 'Xuất dữ liệu',
           ),
           IconButton(
             icon: const Icon(Icons.point_of_sale),
-            onPressed: () => Navigator.of(context).pushNamed('/pos'),
+            onPressed: () => context.router.push(const PosRoute()),
           ),
           IconButton(
             icon: const Icon(Icons.receipt_long),
-            onPressed: () => Navigator.of(context).pushNamed('/orders'),
+            onPressed: () => context.router.push(const OrderHistoryRoute()),
           ),
           IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: () => Navigator.of(context).pushNamed('/settings'),
+            onPressed: () => context.router.push(const SettingsRoute()),
           ),
           IconButton(
             icon: const Icon(Icons.history),
-            onPressed: () => Navigator.of(context).pushNamed('/audit'),
+            onPressed: () => context.router.push(const AuditLogRoute()),
           ),
           IconButton(
             icon: const Icon(Icons.store),
-            onPressed: () => Navigator.of(context).pushNamed('/stores'),
+            onPressed: () => context.router.push(const StoresRoute()),
           ),
         ],
       ),

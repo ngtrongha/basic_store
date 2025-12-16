@@ -1,23 +1,15 @@
 import 'dart:convert';
 
-import 'package:objectbox/objectbox.dart';
-
-
-@Entity()
 class PurchaseOrder {
-  @Id()
   int id = 0;
 
-  @Index()
   int supplierId = 0;
 
-  @Property(type: PropertyType.date)
   DateTime createdAt = DateTime.now();
   String status = 'open'; // open, received, cancelled
 
   String itemsJson = '[]';
 
-  @Transient()
   List<PurchaseOrderItem> get items => _itemsCache ??= _decodeItems(itemsJson);
 
   set items(List<PurchaseOrderItem> value) {
@@ -25,7 +17,6 @@ class PurchaseOrder {
     itemsJson = jsonEncode(value.map((e) => e.toJson()).toList());
   }
 
-  @Transient()
   List<PurchaseOrderItem>? _itemsCache;
 }
 

@@ -1,15 +1,8 @@
-import 'package:objectbox/objectbox.dart';
-
-
-@Entity()
 class Product {
-  @Id()
   int id = 0;
 
   String name = '';
 
-  @Index()
-  @Unique()
   String sku = '';
 
   double costPrice = 0;

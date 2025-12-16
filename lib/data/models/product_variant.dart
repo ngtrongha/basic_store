@@ -1,12 +1,6 @@
-import 'package:objectbox/objectbox.dart';
-
-
-@Entity()
 class ProductVariant {
-  @Id()
   int id = 0;
 
-  @Index()
   int productId = 0;
 
   // Simple attributes for common cases
@@ -23,6 +17,5 @@ class ProductVariant {
   int stock = 0;
 
   bool isActive = true;
-  @Property(type: PropertyType.date)
   DateTime createdAt = DateTime.now();
 }

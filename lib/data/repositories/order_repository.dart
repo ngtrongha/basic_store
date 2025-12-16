@@ -1,47 +1,75 @@
-import 'package:objectbox/objectbox.dart' as ob;
+import 'package:drift/drift.dart';
 
-import '../../objectbox.g.dart';
+import '../db/app_database.dart';
 import '../models/order.dart' as model;
 import '../services/database_service.dart';
 
 class OrderRepository {
-  ob.Box<model.Order> get _box =>
-      DatabaseService.instance.store.box<model.Order>();
+  AppDatabase get _db => DatabaseService.instance.db;
 
   Future<int> create(model.Order order) async {
-    return DatabaseService.instance.runWrite<int>(() => _box.put(order));
+    final companion = OrdersCompanion(
+      id: order.id == 0 ? const Value.absent() : Value(order.id),
+      createdAt: Value(order.createdAt),
+      totalAmount: Value(order.totalAmount),
+      customerId: Value(order.customerId),
+      pointsDelta: Value(order.pointsDelta),
+      itemsJson: Value(order.itemsJson),
+      changeAmount: Value(order.change),
+    );
+    final id = await _db
+        .into(_db.orders)
+        .insert(companion, mode: InsertMode.insertOrReplace);
+    order.id = id;
+    return id;
   }
 
   Future<model.Order?> getById(int id) async {
-    return Future.value(_box.get(id));
+    final row = await (_db.select(
+      _db.orders,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
+    return row == null ? null : _toModel(row);
   }
 
   Future<List<model.Order>> getAll({int offset = 0, int limit = 50}) async {
-    final query = _box.query().build();
-    try {
-      final results = query.find();
-      if (offset >= results.length) return <model.Order>[];
-      return results.skip(offset).take(limit).toList();
-    } finally {
-      query.close();
-    }
+    final rows =
+        await (_db.select(_db.orders)
+              ..orderBy([
+                (t) => OrderingTerm(
+                  expression: t.createdAt,
+                  mode: OrderingMode.desc,
+                ),
+              ])
+              ..limit(limit, offset: offset))
+            .get();
+    return rows.map(_toModel).toList();
   }
 
   Future<List<model.Order>> getByDateRange(
     DateTime startDate,
     DateTime endDate,
   ) async {
-    final builder = _box.query(
-      Order_.createdAt.between(
-        startDate.millisecondsSinceEpoch,
-        endDate.millisecondsSinceEpoch,
-      ),
-    )..order(Order_.createdAt, flags: ob.Order.descending);
-    final query = builder.build();
-    try {
-      return query.find();
-    } finally {
-      query.close();
-    }
+    final rows =
+        await (_db.select(_db.orders)
+              ..where((t) => t.createdAt.isBetweenValues(startDate, endDate))
+              ..orderBy([
+                (t) => OrderingTerm(
+                  expression: t.createdAt,
+                  mode: OrderingMode.desc,
+                ),
+              ]))
+            .get();
+    return rows.map(_toModel).toList();
+  }
+
+  model.Order _toModel(OrderRow row) {
+    return model.Order()
+      ..id = row.id
+      ..createdAt = row.createdAt
+      ..totalAmount = row.totalAmount
+      ..customerId = row.customerId
+      ..pointsDelta = row.pointsDelta
+      ..itemsJson = row.itemsJson
+      ..change = row.changeAmount;
   }
 }

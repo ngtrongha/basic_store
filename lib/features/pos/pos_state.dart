@@ -1,4 +1,9 @@
-part of 'pos_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../../data/models/order.dart';
+import '../../data/models/promotion.dart';
+
+part 'pos_state.freezed.dart';
 
 @freezed
 abstract class PosState with _$PosState {

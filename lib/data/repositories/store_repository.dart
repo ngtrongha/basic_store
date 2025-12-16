@@ -1,45 +1,73 @@
-import '../../objectbox.g.dart';
+import 'package:drift/drift.dart';
+
+import '../db/app_database.dart';
 import '../models/store.dart' as model;
 import '../services/database_service.dart';
 
 class StoreRepository {
-  Box<model.Store> get _box =>
-      DatabaseService.instance.store.box<model.Store>();
+  AppDatabase get _db => DatabaseService.instance.db;
 
   Future<int> create(model.Store store) async {
-    return DatabaseService.instance.runWrite<int>(() => _box.put(store));
+    final companion = StoresCompanion(
+      id: store.id == 0 ? const Value.absent() : Value(store.id),
+      name: Value(store.name),
+      address: Value(store.address),
+      phone: Value(store.phone),
+      email: Value(store.email),
+      isActive: Value(store.isActive),
+      createdAt: Value(store.createdAt),
+    );
+    final id = await _db
+        .into(_db.stores)
+        .insert(companion, mode: InsertMode.insertOrReplace);
+    store.id = id;
+    return id;
   }
 
   Future<model.Store?> getById(int id) async {
-    return Future.value(_box.get(id));
+    final row = await (_db.select(
+      _db.stores,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
+    return row == null ? null : _toModel(row);
   }
 
   Future<List<model.Store>> getAll({int limit = 100}) async {
-    final query = _box.query().build();
-    try {
-      final results = query.find();
-      if (results.length <= limit) return results;
-      return results.take(limit).toList();
-    } finally {
-      query.close();
-    }
+    final rows =
+        await (_db.select(_db.stores)
+              ..orderBy([(t) => OrderingTerm(expression: t.id)])
+              ..limit(limit))
+            .get();
+    return rows.map(_toModel).toList();
   }
 
   Future<List<model.Store>> getActiveStores() async {
-    final builder = _box.query(Store_.isActive.equals(true));
-    final query = builder.build();
-    try {
-      return query.find();
-    } finally {
-      query.close();
-    }
+    final rows =
+        await (_db.select(_db.stores)
+              ..where((t) => t.isActive.equals(true))
+              ..orderBy([(t) => OrderingTerm(expression: t.id)]))
+            .get();
+    return rows.map(_toModel).toList();
   }
 
   Future<void> update(model.Store store) async {
-    await DatabaseService.instance.runWrite<int>(() => _box.put(store));
+    await create(store);
   }
 
   Future<bool> delete(int id) async {
-    return Future.value(_box.remove(id));
+    final deleted = await (_db.delete(
+      _db.stores,
+    )..where((t) => t.id.equals(id))).go();
+    return deleted > 0;
+  }
+
+  model.Store _toModel(StoreRow row) {
+    return model.Store()
+      ..id = row.id
+      ..name = row.name
+      ..address = row.address
+      ..phone = row.phone
+      ..email = row.email
+      ..isActive = row.isActive
+      ..createdAt = row.createdAt;
   }
 }

@@ -1,38 +1,56 @@
-import '../../objectbox.g.dart';
+import 'package:drift/drift.dart';
 
+import '../db/app_database.dart';
 import '../models/user.dart';
 import '../services/database_service.dart';
 
 class UserRepository {
-  Box<AppUser> get _box => DatabaseService.instance.store.box<AppUser>();
+  AppDatabase get _db => DatabaseService.instance.db;
 
   Future<int> create(AppUser user) async {
-    return DatabaseService.instance.runWrite<int>(() => _box.put(user));
+    final companion = UsersCompanion(
+      id: user.id == 0 ? const Value.absent() : Value(user.id),
+      username: Value(user.username),
+      password: Value(user.password),
+      roleValue: Value(user.roleValue),
+      createdAt: Value(user.createdAt),
+    );
+    final id = await _db
+        .into(_db.users)
+        .insert(companion, mode: InsertMode.insertOrReplace);
+    user.id = id;
+    return id;
   }
 
   Future<AppUser?> getByUsername(String username) async {
-    final builder =
-        _box.query(AppUser_.username.equals(username, caseSensitive: false));
-    final query = builder.build();
-    try {
-      return query.findFirst();
-    } finally {
-      query.close();
-    }
+    final row = await (_db.select(
+      _db.users,
+    )..where((t) => t.username.equals(username))).getSingleOrNull();
+    return row == null ? null : _toModel(row);
   }
 
   Future<AppUser?> getById(int id) async {
-    return Future.value(_box.get(id));
+    final row = await (_db.select(
+      _db.users,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
+    return row == null ? null : _toModel(row);
   }
 
   Future<List<AppUser>> getAll({int limit = 100}) async {
-    final query = _box.query().build();
-    try {
-      final results = query.find();
-      if (results.length <= limit) return results;
-      return results.take(limit).toList();
-    } finally {
-      query.close();
-    }
+    final rows =
+        await (_db.select(_db.users)
+              ..orderBy([(t) => OrderingTerm(expression: t.id)])
+              ..limit(limit))
+            .get();
+    return rows.map(_toModel).toList();
+  }
+
+  AppUser _toModel(UserRow row) {
+    return AppUser()
+      ..id = row.id
+      ..username = row.username
+      ..password = row.password
+      ..roleValue = row.roleValue
+      ..createdAt = row.createdAt;
   }
 }

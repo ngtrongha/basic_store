@@ -1,16 +1,10 @@
 import 'dart:convert';
 
-import 'package:objectbox/objectbox.dart';
-
 import 'payment.dart';
 
-
-@Entity()
 class Order {
-  @Id()
   int id = 0;
 
-  @Property(type: PropertyType.date)
   DateTime createdAt = DateTime.now();
   double totalAmount = 0;
   int? customerId;
@@ -18,7 +12,6 @@ class Order {
 
   String itemsJson = '[]';
 
-  @Transient()
   List<OrderItem> get items => _itemsCache ??= _decodeItems(itemsJson);
 
   set items(List<OrderItem> value) {
@@ -26,10 +19,8 @@ class Order {
     itemsJson = jsonEncode(value.map((e) => e.toJson()).toList());
   }
 
-  @Transient()
   List<OrderItem>? _itemsCache;
 
-  @Transient()
   List<Payment> payments = [];
 
   double change = 0;

@@ -1,19 +1,16 @@
-import 'package:objectbox/objectbox.dart' as ob;
-import 'package:path_provider/path_provider.dart';
+import 'package:drift/drift.dart';
 
-import '../../objectbox.g.dart';
-import '../models/product.dart';
-import '../models/store.dart' as model;
+import '../db/app_database.dart';
 import '../models/user.dart';
 
 class DatabaseService {
   DatabaseService._internal();
   static final DatabaseService instance = DatabaseService._internal();
 
-  ob.Store? _store;
+  AppDatabase? _db;
 
-  ob.Store get store {
-    final value = _store;
+  AppDatabase get db {
+    final value = _db;
     if (value == null) {
       throw StateError('DatabaseService not initialized. Call init() first.');
     }
@@ -21,76 +18,85 @@ class DatabaseService {
   }
 
   Future<void> init() async {
-    if (_store != null) return;
-    final dir = await getApplicationDocumentsDirectory();
-    _store = await openStore(directory: dir.path);
+    if (_db != null) return;
+    _db = AppDatabase();
+    // Force open early to surface any IO errors before runApp().
+    await db.customSelect('SELECT 1').getSingleOrNull();
   }
 
   Future<void> reopen() async {
-    final current = _store;
+    final current = _db;
     if (current != null) {
-      current.close();
-      _store = null;
+      await current.close();
+      _db = null;
     }
     await init();
   }
 
-  Future<T> runWrite<T>(T Function() action) async {
-    return Future<T>(() => store.runInTransaction(ob.TxMode.write, action));
+  Future<T> runWrite<T>(Future<T> Function(AppDatabase db) action) async {
+    return db.transaction(() => action(db));
   }
 
-  Future<void> runWriteVoid(void Function() action) async {
-    await Future<void>(() {
-      store.runInTransaction(ob.TxMode.write, () {
-        action();
-        return true;
-      });
-    });
+  Future<void> runWriteVoid(
+    Future<void> Function(AppDatabase db) action,
+  ) async {
+    await db.transaction(() => action(db));
   }
 
   Future<void> seedIfEmpty() async {
-    final products = store.box<Product>();
-    if (products.isEmpty()) {
+    final hasProduct = await db.select(db.products).getSingleOrNull();
+    if (hasProduct == null) {
       final seedProducts = List.generate(10, (i) {
-        return Product()
-          ..name = 'Sản phẩm ${i + 1}'
-          ..sku = 'SKU${1000 + i}'
-          ..costPrice = (i + 1) * 8000.0
-          ..salePrice = (i + 1) * 10000.0
-          ..stock = 10 + i
-          ..lowStockThreshold = 5
-          ..category = 'Danh mục ${(i % 3) + 1}';
+        return ProductsCompanion.insert(
+          name: 'Sản phẩm ${i + 1}',
+          sku: 'SKU${1000 + i}',
+          costPrice: Value((i + 1) * 8000.0),
+          salePrice: Value((i + 1) * 10000.0),
+          stock: Value(10 + i),
+          lowStockThreshold: const Value(5),
+          category: Value('Danh mục ${(i % 3) + 1}'),
+        );
       });
-      products.putMany(seedProducts);
+      await db.batch((batch) {
+        batch.insertAll(db.products, seedProducts);
+      });
     }
 
-    final users = store.box<AppUser>();
-    if (users.isEmpty()) {
-      users.putMany([
-        AppUser()
-          ..username = 'admin'
-          ..password = 'admin'
-          ..role = UserRole.admin,
-        AppUser()
-          ..username = 'manager'
-          ..password = 'manager'
-          ..role = UserRole.manager,
-        AppUser()
-          ..username = 'cashier'
-          ..password = 'cashier'
-          ..role = UserRole.cashier,
-      ]);
+    final hasUser = await db.select(db.users).getSingleOrNull();
+    if (hasUser == null) {
+      await db.batch((batch) {
+        batch.insertAll(db.users, [
+          UsersCompanion.insert(
+            username: 'admin',
+            password: 'admin',
+            roleValue: UserRole.admin.index,
+          ),
+          UsersCompanion.insert(
+            username: 'manager',
+            password: 'manager',
+            roleValue: UserRole.manager.index,
+          ),
+          UsersCompanion.insert(
+            username: 'cashier',
+            password: 'cashier',
+            roleValue: UserRole.cashier.index,
+          ),
+        ]);
+      });
     }
 
-    final stores = store.box<model.Store>();
-    if (stores.isEmpty()) {
-      stores.put(
-        model.Store()
-          ..name = 'Cửa hàng chính'
-          ..address = 'Địa chỉ mặc định'
-          ..isActive = true
-          ..createdAt = DateTime.now(),
-      );
+    final hasStore = await db.select(db.stores).getSingleOrNull();
+    if (hasStore == null) {
+      await db
+          .into(db.stores)
+          .insert(
+            StoresCompanion.insert(
+              name: 'Cửa hàng chính',
+              address: const Value('Địa chỉ mặc định'),
+              isActive: const Value(true),
+              createdAt: Value(DateTime.now()),
+            ),
+          );
     }
   }
 }

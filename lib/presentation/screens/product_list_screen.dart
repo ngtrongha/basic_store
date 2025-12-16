@@ -1,22 +1,24 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/repositories/product_repository.dart';
 import '../../presentation/dialogs/add_product_dialog.dart';
 import '../../data/models/product.dart';
-import 'scanner_screen.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../blocs/pos/pos_bloc.dart';
+import '../../features/pos/pos_controller.dart';
+import '../../router/app_router.dart';
 import '../widgets/product_search_field.dart';
 import '../../data/services/favorite_service.dart';
 import '../../l10n/app_localizations.dart';
 
-class ProductListScreen extends StatefulWidget {
+@RoutePage()
+class ProductListScreen extends ConsumerStatefulWidget {
   const ProductListScreen({super.key});
 
   @override
-  State<ProductListScreen> createState() => _ProductListScreenState();
+  ConsumerState<ProductListScreen> createState() => _ProductListScreenState();
 }
 
-class _ProductListScreenState extends State<ProductListScreen>
+class _ProductListScreenState extends ConsumerState<ProductListScreen>
     with TickerProviderStateMixin {
   final _repo = ProductRepository();
   List<Product> _products = const [];
@@ -76,9 +78,12 @@ class _ProductListScreenState extends State<ProductListScreen>
           IconButton(
             icon: const Icon(Icons.qr_code_scanner),
             onPressed: () async {
-              final sku = await Navigator.of(context).push<String>(
-                MaterialPageRoute(builder: (_) => const ScannerScreen()),
-              );
+              final result = await context.router.push(const ScannerRoute());
+              final sku = result is String
+                  ? result
+                  : (result is List<String> && result.isNotEmpty
+                        ? result.first
+                        : null);
               if (sku == null || sku.isEmpty) return;
               final found = await _repo.getBySku(sku);
               if (found == null) {
@@ -93,7 +98,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                 return;
               }
               if (!mounted) return;
-              context.read<PosBloc>().add(PosEvent.addProduct(found));
+              await ref.read(posControllerProvider.notifier).addProduct(found);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
@@ -119,19 +124,19 @@ class _ProductListScreenState extends State<ProductListScreen>
           IconButton(
             icon: const Icon(Icons.point_of_sale),
             onPressed: () {
-              Navigator.of(context).pushNamed('/pos');
+              context.router.push(const PosRoute());
             },
           ),
           IconButton(
             icon: const Icon(Icons.receipt_long),
             onPressed: () {
-              Navigator.of(context).pushNamed('/orders');
+              context.router.push(const OrderHistoryRoute());
             },
           ),
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              Navigator.of(context).pushNamed('/settings');
+              context.router.push(const SettingsRoute());
             },
           ),
         ],
@@ -169,8 +174,10 @@ class _ProductListScreenState extends State<ProductListScreen>
                           '${AppLocalizations.of(context)!.sku}: ${p.sku} • ${AppLocalizations.of(context)!.stock}: ${p.stock}',
                         ),
                         trailing: Text('${p.salePrice.toStringAsFixed(0)} đ'),
-                        onTap: () {
-                          context.read<PosBloc>().add(PosEvent.addProduct(p));
+                        onTap: () async {
+                          await ref
+                              .read(posControllerProvider.notifier)
+                              .addProduct(p);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -202,10 +209,10 @@ class _ProductListScreenState extends State<ProductListScreen>
                               trailing: Text(
                                 '${p.salePrice.toStringAsFixed(0)} đ',
                               ),
-                              onTap: () {
-                                context.read<PosBloc>().add(
-                                  PosEvent.addProduct(p),
-                                );
+                              onTap: () async {
+                                await ref
+                                    .read(posControllerProvider.notifier)
+                                    .addProduct(p);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(

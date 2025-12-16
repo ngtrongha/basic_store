@@ -1,8 +1,5 @@
 import 'dart:convert';
 
-import 'package:objectbox/objectbox.dart';
- 
-
 class BundleItem {
   int productId = 0;
   int quantity = 1;
@@ -19,9 +16,7 @@ class BundleItem {
   }
 }
 
-@Entity()
 class ProductBundle {
-  @Id()
   int id = 0;
 
   String name = '';
@@ -30,7 +25,6 @@ class ProductBundle {
 
   String itemsJson = '[]';
 
-  @Transient()
   List<BundleItem> get items => _itemsCache ??= _decodeItems(itemsJson);
 
   set items(List<BundleItem> value) {
@@ -39,11 +33,9 @@ class ProductBundle {
     itemsJson = jsonEncode(encoded);
   }
 
-  @Transient()
   List<BundleItem>? _itemsCache;
 
   bool isActive = true;
-  @Property(type: PropertyType.date)
   DateTime createdAt = DateTime.now();
 }
 

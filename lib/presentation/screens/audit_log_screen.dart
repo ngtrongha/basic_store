@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -6,6 +7,7 @@ import '../../data/models/audit_log.dart';
 import '../../data/services/auth_service.dart';
 import '../../data/models/user.dart';
 
+@RoutePage()
 class AuditLogScreen extends StatefulWidget {
   const AuditLogScreen({super.key});
 

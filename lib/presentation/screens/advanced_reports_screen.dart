@@ -1,8 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../data/services/advanced_reporting_service.dart';
 import 'package:intl/intl.dart';
 
+@RoutePage()
 class AdvancedReportsScreen extends StatefulWidget {
   const AdvancedReportsScreen({super.key});
 

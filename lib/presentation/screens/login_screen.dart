@@ -1,8 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 
 import '../../data/services/auth_service.dart';
+import '../../router/app_router.dart';
 
+@RoutePage()
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -35,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
           SnackBar(content: Text(AppLocalizations.of(context)!.loginError)),
         );
       } else {
-        Navigator.of(context).pushReplacementNamed('/');
+        context.router.replaceAll([const DashboardRoute()]);
       }
     } finally {
       if (mounted) setState(() => _loading = false);

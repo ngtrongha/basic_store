@@ -1,24 +1,17 @@
 import 'dart:convert';
 
-import 'package:objectbox/objectbox.dart';
-
-
 enum ReturnReason { defective, wrongItem, customerChange, duplicate, other }
 
-@Entity()
 class Return {
-  @Id()
   int id = 0;
 
   int originalOrderId = 0;
-  @Property(type: PropertyType.date)
   DateTime createdAt = DateTime.now();
   String reason = '';
   String notes = '';
   double refundAmount = 0;
   String itemsJson = '[]';
 
-  @Transient()
   List<ReturnItem> get items => _itemsCache ??= _decodeItems(itemsJson);
 
   set items(List<ReturnItem> value) {
@@ -26,7 +19,6 @@ class Return {
     itemsJson = jsonEncode(value.map((e) => e.toJson()).toList());
   }
 
-  @Transient()
   List<ReturnItem>? _itemsCache;
   int? customerId;
 }

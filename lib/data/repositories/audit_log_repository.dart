@@ -1,25 +1,47 @@
+import 'package:drift/drift.dart';
 
-import '../../objectbox.g.dart';
+import '../db/app_database.dart';
 import '../models/audit_log.dart';
 import '../services/database_service.dart';
 
 class AuditLogRepository {
-  Box<AuditLog> get _box => DatabaseService.instance.store.box<AuditLog>();
+  AppDatabase get _db => DatabaseService.instance.db;
 
   Future<int> create(AuditLog log) async {
-    return DatabaseService.instance.runWrite<int>(() => _box.put(log));
+    final companion = AuditLogsCompanion(
+      id: log.id == 0 ? const Value.absent() : Value(log.id),
+      userId: Value(log.userId),
+      action: Value(log.action),
+      details: Value(log.details),
+      createdAt: Value(log.createdAt),
+    );
+    final id = await _db
+        .into(_db.auditLogs)
+        .insert(companion, mode: InsertMode.insertOrReplace);
+    log.id = id;
+    return id;
   }
 
   Future<List<AuditLog>> list({int limit = 200}) async {
-    final builder = _box.query()
-      ..order(AuditLog_.createdAt, flags: Order.descending);
-    final query = builder.build();
-    try {
-      final results = query.find();
-      if (results.length <= limit) return results;
-      return results.take(limit).toList();
-    } finally {
-      query.close();
-    }
+    final rows =
+        await (_db.select(_db.auditLogs)
+              ..orderBy([
+                (t) => OrderingTerm(
+                  expression: t.createdAt,
+                  mode: OrderingMode.desc,
+                ),
+              ])
+              ..limit(limit))
+            .get();
+    return rows.map(_toModel).toList();
+  }
+
+  AuditLog _toModel(AuditLogRow row) {
+    return AuditLog()
+      ..id = row.id
+      ..userId = row.userId
+      ..action = row.action
+      ..details = row.details
+      ..createdAt = row.createdAt;
   }
 }

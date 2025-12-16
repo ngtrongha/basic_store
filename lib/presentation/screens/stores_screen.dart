@@ -1,9 +1,12 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 
 import '../../data/models/store.dart';
 import '../../data/services/multi_store_service.dart';
+import '../../router/app_router.dart';
 
+@RoutePage()
 class StoresScreen extends StatefulWidget {
   const StoresScreen({super.key});
 
@@ -100,9 +103,9 @@ class _StoresScreenState extends State<StoresScreen> {
                     trailing: PopupMenuButton<String>(
                       onSelected: (value) async {
                         if (value == 'transfers') {
-                          Navigator.of(
-                            context,
-                          ).pushNamed('/stock-transfers', arguments: store.id);
+                          context.router.push(
+                            StockTransfersRoute(storeId: store.id),
+                          );
                         }
                       },
                       itemBuilder: (context) => [

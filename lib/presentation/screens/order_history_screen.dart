@@ -1,4 +1,5 @@
 import 'package:basic_store/data/models/return.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -8,6 +9,7 @@ import '../../data/services/invoice_service.dart';
 import '../../data/services/return_service.dart';
 import '../dialogs/return_dialog.dart';
 
+@RoutePage()
 class OrderHistoryScreen extends StatefulWidget {
   const OrderHistoryScreen({super.key});
 

@@ -1,9 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 
 import '../../data/models/supplier.dart';
 import '../../data/repositories/supplier_repository.dart';
 
+@RoutePage()
 class SuppliersScreen extends StatefulWidget {
   const SuppliersScreen({super.key});
 

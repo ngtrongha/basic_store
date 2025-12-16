@@ -34,10 +34,18 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  flutter_bloc: ^9.1.1
-  freezed_annotation: any
-  objectbox: ^5.0.1
-  objectbox_flutter_libs: ^5.0.1
+  freezed_annotation: ^3.1.0
+  flutter_riverpod: ^3.0.3
+  get_it: ^9.2.0
+  injectable: ^2.7.1+2
+  auto_route: ^11.0.0
+  talker: ^5.1.9
+  talker_flutter: ^5.1.9
+  talker_riverpod_logger: ^5.1.9
+  drift: ^2.30.0
+  drift_flutter: ^0.2.8
+  sqlite3_flutter_libs: ^0.5.41
+  cristalyse: ^1.17.2
   mobile_scanner: ^7.1.2
   pdf: ^3.10.6
   printing: ^5.11.0
@@ -55,8 +63,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner: ^2.4.13
-  freezed: any
-  objectbox_generator: ^5.0.1
+  freezed: ^3.2.3
+  auto_route_generator: ^10.4.0
+  injectable_generator: ^2.9.1
+  drift_dev: ^2.30.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

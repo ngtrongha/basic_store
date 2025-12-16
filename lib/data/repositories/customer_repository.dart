@@ -1,68 +1,84 @@
-import '../../objectbox.g.dart';
+import 'package:drift/drift.dart';
 
+import '../db/app_database.dart';
 import '../models/customer.dart';
 import '../services/database_service.dart';
 
 class CustomerRepository {
-  Box<Customer> get _box => DatabaseService.instance.store.box<Customer>();
+  AppDatabase get _db => DatabaseService.instance.db;
 
   Future<int> create(Customer customer) async {
-    return DatabaseService.instance.runWrite<int>(() => _box.put(customer));
+    final companion = CustomersCompanion(
+      id: customer.id == 0 ? const Value.absent() : Value(customer.id),
+      name: Value(customer.name),
+      phone: Value(customer.phone),
+      email: Value(customer.email),
+      tier: Value(customer.tier),
+      points: Value(customer.points),
+    );
+    final id = await _db
+        .into(_db.customers)
+        .insert(companion, mode: InsertMode.insertOrReplace);
+    customer.id = id;
+    return id;
   }
 
   Future<bool> deleteById(int id) async {
-    return Future.value(_box.remove(id));
+    final deleted = await (_db.delete(
+      _db.customers,
+    )..where((t) => t.id.equals(id))).go();
+    return deleted > 0;
   }
 
   Future<Customer?> getById(int id) async {
-    return Future.value(_box.get(id));
+    final row = await (_db.select(
+      _db.customers,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
+    return row == null ? null : _toModel(row);
   }
 
   Future<List<Customer>> search({String? query, int limit = 100}) async {
-    if (query == null || query.trim().isEmpty) {
-      final q = _box.query().build();
-      try {
-        final results = q.find();
-        if (results.length <= limit) return results;
-        return results.take(limit).toList();
-      } finally {
-        q.close();
-      }
+    final q = query?.trim();
+    final select = _db.select(_db.customers)
+      ..orderBy([(t) => OrderingTerm(expression: t.id)])
+      ..limit(limit);
+    if (q != null && q.isNotEmpty) {
+      final pattern = '%$q%';
+      select.where(
+        (t) => t.name.like(pattern) | t.phone.equals(q) | t.email.equals(q),
+      );
     }
-    final q = query.trim();
-    final condition =
-        Customer_.name.contains(q, caseSensitive: false) |
-        Customer_.phone.equals(q, caseSensitive: false) |
-        Customer_.email.equals(q, caseSensitive: false);
-    final queryBuilt = _box.query(condition).build();
-    try {
-      final results = queryBuilt.find();
-      if (results.length <= limit) return results;
-      return results.take(limit).toList();
-    } finally {
-      queryBuilt.close();
-    }
+    final rows = await select.get();
+    return rows.map(_toModel).toList();
   }
 
   Future<void> addPoints(int customerId, int points) async {
-    await DatabaseService.instance.runWriteVoid(() {
-      final customer = _box.get(customerId);
-      if (customer == null) {
-        return;
-      }
-      customer.points = customer.points + points;
-      _box.put(customer);
+    await DatabaseService.instance.runWriteVoid((db) async {
+      final row = await (db.select(
+        db.customers,
+      )..where((t) => t.id.equals(customerId))).getSingleOrNull();
+      if (row == null) return;
+      await (db.update(db.customers)..where((t) => t.id.equals(customerId)))
+          .write(CustomersCompanion(points: Value(row.points + points)));
     });
   }
 
   Future<List<Customer>> getAll({int limit = 1000}) async {
-    final query = _box.query().build();
-    try {
-      final results = query.find();
-      if (results.length <= limit) return results;
-      return results.take(limit).toList();
-    } finally {
-      query.close();
-    }
+    final rows =
+        await (_db.select(_db.customers)
+              ..orderBy([(t) => OrderingTerm(expression: t.id)])
+              ..limit(limit))
+            .get();
+    return rows.map(_toModel).toList();
+  }
+
+  Customer _toModel(CustomerRow row) {
+    return Customer()
+      ..id = row.id
+      ..name = row.name
+      ..phone = row.phone
+      ..email = row.email
+      ..tier = row.tier
+      ..points = row.points;
   }
 }

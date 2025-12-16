@@ -1,4 +1,12 @@
-<!-- ff7b6874-5bc5-4f44-8857-695f1c6c5c59 68a9eefc-cec5-4dcb-ab1a-a68e7172a5da -->
+---
+name: Kế hoạch khởi tạo Flutter POS (BLoC + Isar)
+overview: ""
+todos:
+  - id: bcb0ecbc-66a1-401c-806f-a159c3012dfc
+    content: Tìm kiếm Model AI có thể chạy local hỗ trợ ứng dụng
+    status: pending
+---
+
 # Kế hoạch khởi tạo Flutter POS (BLoC + Isar)
 
 ## 1) Cập nhật dependencies và tooling
@@ -90,16 +98,3 @@ lib/
 
 - Seed vài `Product` mẫu nếu DB trống.
 - Thử tạo `Order` từ `PosCubit` và xuất PDF, chia sẻ file.
-
-### To-dos
-
-- [ ] Thêm dependencies và dev_dependencies bằng flutter pub add
-- [ ] Tạo cấu trúc thư mục data/logic/presentation và dialogs
-- [ ] Tạo models Isar Product và Order + OrderItem
-- [ ] Tạo DatabaseService singleton mở Isar
-- [ ] Thêm ProductRepository và OrderRepository
-- [ ] Tạo PosCubit/PosState quản lý giỏ và tổng tiền
-- [ ] Tạo ProductListScreen, PosScreen và widgets cần thiết
-- [ ] Viết InvoiceService tạo PDF, lưu tạm, chia sẻ
-- [ ] Khởi tạo DB trong main, chạy build_runner
-- [ ] Tìm kiếm Model AI có thể chạy local hỗ trợ ứng dụng
