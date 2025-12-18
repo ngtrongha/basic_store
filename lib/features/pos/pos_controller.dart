@@ -6,6 +6,7 @@ import '../../data/models/product.dart';
 import '../../data/models/promotion.dart';
 import '../../data/repositories/product_unit_repository.dart';
 import '../../data/services/totals_calculator.dart';
+import '../../di/injection.dart';
 import 'pos_state.dart';
 
 final posControllerProvider = NotifierProvider<PosController, PosState>(
@@ -13,7 +14,7 @@ final posControllerProvider = NotifierProvider<PosController, PosState>(
 );
 
 class PosController extends Notifier<PosState> {
-  final _productUnitRepo = ProductUnitRepository();
+  ProductUnitRepository get _productUnitRepo => getIt<ProductUnitRepository>();
 
   @override
   PosState build() => PosState.initial();

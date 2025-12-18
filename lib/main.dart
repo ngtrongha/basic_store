@@ -7,14 +7,19 @@ import 'package:talker_flutter/talker_flutter.dart';
 import 'package:talker_riverpod_logger/talker_riverpod_logger.dart';
 
 import 'data/services/database_service.dart';
-import 'data/services/settings_service.dart';
 import 'data/services/locale_service.dart';
-import 'logging/talker.dart';
+import 'data/services/settings_service.dart';
+import 'di/injection.dart';
 import 'l10n/app_localizations.dart';
+import 'logging/talker.dart';
 import 'router/app_router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize dependency injection
+  configureDependencies();
+
   await DatabaseService.instance.init();
   await DatabaseService.instance.seedIfEmpty();
 
