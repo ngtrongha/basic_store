@@ -311,3 +311,19 @@ class TalkerLogsRoute extends PageRouteInfo<void> {
     },
   );
 }
+
+/// generated route for
+/// [UnitsScreen]
+class UnitsRoute extends PageRouteInfo<void> {
+  const UnitsRoute({List<PageRouteInfo>? children})
+    : super(UnitsRoute.name, initialChildren: children);
+
+  static const String name = 'UnitsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const UnitsScreen();
+    },
+  );
+}

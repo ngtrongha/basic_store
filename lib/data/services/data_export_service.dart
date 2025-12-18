@@ -15,9 +15,13 @@ import '../repositories/goods_receipt_repository.dart';
 import '../repositories/store_repository.dart';
 import '../repositories/stock_transfer_repository.dart';
 import '../repositories/audit_log_repository.dart';
+import '../repositories/unit_repository.dart';
+import '../repositories/product_unit_repository.dart';
 
 class DataExportService {
   final _productRepo = ProductRepository();
+  final _unitRepo = UnitRepository();
+  final _productUnitRepo = ProductUnitRepository();
   final _orderRepo = OrderRepository();
   final _customerRepo = CustomerRepository();
   final _supplierRepo = SupplierRepository();
@@ -117,6 +121,12 @@ class DataExportService {
         'products': (await _productRepo.getAll(
           limit: 10000,
         )).map((p) => _productToMap(p)).toList(),
+        'units': (await _unitRepo.getAll(
+          limit: 10000,
+        )).map((u) => _unitToMap(u)).toList(),
+        'productUnits': (await _productUnitRepo.getAllWithUnits(
+          limit: 10000,
+        )).map((pu) => _productUnitToMap(pu)).toList(),
         'orders': (await _orderRepo.getAll(
           limit: 10000,
         )).map((o) => _orderToMap(o)).toList(),
@@ -361,6 +371,28 @@ class DataExportService {
     'barcode': product.barcode,
   };
 
+  Map<String, dynamic> _unitToMap(dynamic unit) => {
+    'id': unit.id,
+    'name': unit.name,
+    'key': unit.key,
+    'isActive': unit.isActive,
+    'createdAt': unit.createdAt.toIso8601String(),
+  };
+
+  Map<String, dynamic> _productUnitToMap(dynamic pu) => {
+    'productId': pu.productUnit.productId,
+    'unitId': pu.productUnit.unitId,
+    'unitName': pu.unit.name,
+    'unitKey': pu.unit.key,
+    'factor': pu.productUnit.factor,
+    'isBase': pu.productUnit.isBase,
+    'isDefault': pu.productUnit.isDefault,
+    'priceOverride': pu.productUnit.priceOverride,
+    'sku': pu.productUnit.sku,
+    'barcode': pu.productUnit.barcode,
+    'createdAt': pu.productUnit.createdAt.toIso8601String(),
+  };
+
   Map<String, dynamic> _orderToMap(dynamic order) => {
     'id': order.id,
     'createdAt': order.createdAt.toIso8601String(),
@@ -375,6 +407,9 @@ class DataExportService {
             'quantity': item.quantity,
             'price': item.price,
             'lineTotal': item.price * item.quantity,
+            if (item.unitId != null) 'unitId': item.unitId,
+            if (item.unitFactor != 1.0) 'unitFactor': item.unitFactor,
+            if (item.unitName != null) 'unitName': item.unitName,
           },
         )
         .toList(),
@@ -422,6 +457,9 @@ class DataExportService {
             'quantity': item.quantity,
             'price': item.price,
             'reason': item.reason,
+            if (item.unitId != null) 'unitId': item.unitId,
+            if (item.unitFactor != 1.0) 'unitFactor': item.unitFactor,
+            if (item.unitName != null) 'unitName': item.unitName,
           },
         )
         .toList(),

@@ -45,43 +45,75 @@ class _ReturnDialogState extends State<ReturnDialog> {
     setState(() {});
   }
 
-  void _addReturnItem(int productId, int maxQuantity) {
-    final existingIndex = _returnItems.indexWhere(
-      (item) => item.productId == productId,
+  int _findReturnIndex(OrderItem orderItem) {
+    return _returnItems.indexWhere(
+      (it) =>
+          it.productId == orderItem.productId && it.unitId == orderItem.unitId,
     );
-    if (existingIndex != -1) {
-      final current = _returnItems[existingIndex];
-      if (current.quantity.abs() < maxQuantity) {
-        setState(() {
-          _returnItems[existingIndex] = ReturnItem()
-            ..productId = productId
-            ..quantity =
-                current.quantity -
-                1 // negative quantity
-            ..price = current.price
-            ..reason = current.reason;
-        });
-      }
-    } else {
-      final orderItem = widget.order.items.firstWhere(
-        (item) => item.productId == productId,
-      );
+  }
+
+  void _increaseReturnItem(OrderItem orderItem) {
+    final idx = _findReturnIndex(orderItem);
+    if (idx == -1) {
       setState(() {
         _returnItems.add(
           ReturnItem()
-            ..productId = productId
-            ..quantity =
-                -1 // negative quantity
+            ..productId = orderItem.productId
+            ..unitId = orderItem.unitId
+            ..unitFactor = orderItem.unitFactor
+            ..unitName = orderItem.unitName
+            ..quantity = -1
             ..price = orderItem.price
             ..reason = 'defective',
         );
       });
+      return;
     }
+
+    final current = _returnItems[idx];
+    if (current.quantity.abs() >= orderItem.quantity) return;
+
+    setState(() {
+      _returnItems[idx] = ReturnItem()
+        ..productId = current.productId
+        ..unitId = current.unitId
+        ..unitFactor = current.unitFactor
+        ..unitName = current.unitName
+        ..quantity = current.quantity - 1
+        ..price = current.price
+        ..reason = current.reason;
+    });
   }
 
-  void _removeReturnItem(int productId) {
+  void _decreaseReturnItem(OrderItem orderItem) {
+    final idx = _findReturnIndex(orderItem);
+    if (idx == -1) return;
+    final current = _returnItems[idx];
+    final qty = current.quantity.abs();
+    if (qty <= 1) {
+      _removeReturnItem(orderItem);
+      return;
+    }
+
     setState(() {
-      _returnItems.removeWhere((item) => item.productId == productId);
+      _returnItems[idx] = ReturnItem()
+        ..productId = current.productId
+        ..unitId = current.unitId
+        ..unitFactor = current.unitFactor
+        ..unitName = current.unitName
+        ..quantity = current.quantity + 1
+        ..price = current.price
+        ..reason = current.reason;
+    });
+  }
+
+  void _removeReturnItem(OrderItem orderItem) {
+    setState(() {
+      _returnItems.removeWhere(
+        (it) =>
+            it.productId == orderItem.productId &&
+            it.unitId == orderItem.unitId,
+      );
     });
   }
 
@@ -109,50 +141,46 @@ class _ReturnDialogState extends State<ReturnDialog> {
             const SizedBox(height: 8),
             ...widget.order.items.map((orderItem) {
               final product = _products[orderItem.productId];
-              final returnItem = _returnItems.firstWhere(
-                (item) => item.productId == orderItem.productId,
-                orElse: () => ReturnItem()..quantity = 0,
-              );
-              final returnQty = returnItem.quantity.abs();
+              final idx = _findReturnIndex(orderItem);
+              final returnQty = idx == -1
+                  ? 0
+                  : _returnItems[idx].quantity.abs();
+              final unitLabel =
+                  orderItem.unitName == null || orderItem.unitName!.isEmpty
+                  ? ''
+                  : ' ${orderItem.unitName}';
 
               return Card(
                 child: ListTile(
                   title: Text(product?.name ?? 'SP #${orderItem.productId}'),
                   subtitle: Text(
-                    'SL: ${orderItem.quantity} • ${AppLocalizations.of(context)!.price}: ${orderItem.price.toStringAsFixed(0)} đ',
+                    'SL: ${orderItem.quantity}$unitLabel • ${AppLocalizations.of(context)!.price}: ${orderItem.price.toStringAsFixed(0)} đ',
                   ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (returnQty > 0) ...[
                         Text(
-                          '${AppLocalizations.of(context)!.quantity}: $returnQty',
+                          '${AppLocalizations.of(context)!.quantity}: $returnQty$unitLabel',
                         ),
                         const SizedBox(width: 8),
                       ],
                       IconButton(
                         icon: const Icon(Icons.remove),
                         onPressed: returnQty > 0
-                            ? () => _addReturnItem(
-                                orderItem.productId,
-                                orderItem.quantity,
-                              )
+                            ? () => _decreaseReturnItem(orderItem)
                             : null,
                       ),
                       IconButton(
                         icon: const Icon(Icons.add),
                         onPressed: returnQty < orderItem.quantity
-                            ? () => _addReturnItem(
-                                orderItem.productId,
-                                orderItem.quantity,
-                              )
+                            ? () => _increaseReturnItem(orderItem)
                             : null,
                       ),
                       if (returnQty > 0)
                         IconButton(
                           icon: const Icon(Icons.delete),
-                          onPressed: () =>
-                              _removeReturnItem(orderItem.productId),
+                          onPressed: () => _removeReturnItem(orderItem),
                         ),
                     ],
                   ),
@@ -173,6 +201,7 @@ class _ReturnDialogState extends State<ReturnDialog> {
                   labelText: AppLocalizations.of(context)!.reason,
                   border: const OutlineInputBorder(),
                 ),
+                onChanged: (_) => setState(() {}),
               ),
               const SizedBox(height: 8),
               TextField(

@@ -31,17 +31,28 @@ class OrderItem {
   int quantity = 0;
   double price = 0; // unit price at the time of sale
 
+  /// Optional unit info (for selling in converted units).
+  int? unitId;
+  double unitFactor = 1.0; // base units per 1 unit
+  String? unitName;
+
   Map<String, dynamic> toJson() => {
     'productId': productId,
     'quantity': quantity,
     'price': price,
+    if (unitId != null) 'unitId': unitId,
+    if (unitFactor != 1.0) 'unitFactor': unitFactor,
+    if (unitName != null) 'unitName': unitName,
   };
 
   static OrderItem fromJson(Map<String, dynamic> json) {
     return OrderItem()
       ..productId = json['productId'] as int? ?? 0
       ..quantity = json['quantity'] as int? ?? 0
-      ..price = (json['price'] as num?)?.toDouble() ?? 0;
+      ..price = (json['price'] as num?)?.toDouble() ?? 0
+      ..unitId = (json['unitId'] as num?)?.toInt()
+      ..unitFactor = (json['unitFactor'] as num?)?.toDouble() ?? 1.0
+      ..unitName = json['unitName'] as String?;
   }
 }
 

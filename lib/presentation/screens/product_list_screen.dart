@@ -7,6 +7,7 @@ import '../../data/models/product.dart';
 import '../../features/pos/pos_controller.dart';
 import '../../router/app_router.dart';
 import '../widgets/product_search_field.dart';
+import '../widgets/product_units_editor.dart';
 import '../../data/services/favorite_service.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -174,6 +175,13 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen>
                           '${AppLocalizations.of(context)!.sku}: ${p.sku} • ${AppLocalizations.of(context)!.stock}: ${p.stock}',
                         ),
                         trailing: Text('${p.salePrice.toStringAsFixed(0)} đ'),
+                        onLongPress: () async {
+                          await showModalBottomSheet<void>(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (_) => ProductUnitsEditorSheet(product: p),
+                          );
+                        },
                         onTap: () async {
                           await ref
                               .read(posControllerProvider.notifier)
@@ -209,6 +217,14 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen>
                               trailing: Text(
                                 '${p.salePrice.toStringAsFixed(0)} đ',
                               ),
+                              onLongPress: () async {
+                                await showModalBottomSheet<void>(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  builder: (_) =>
+                                      ProductUnitsEditorSheet(product: p),
+                                );
+                              },
                               onTap: () async {
                                 await ref
                                     .read(posControllerProvider.notifier)

@@ -43,9 +43,10 @@ class ReturnService {
 
     // Update stock (add back returned items)
     for (final item in items) {
+      final baseQty = (item.quantity.abs() * item.unitFactor).round();
       await _productRepo.updateStock(
         productId: item.productId,
-        delta: item.quantity.abs(), // positive delta to add stock back
+        delta: baseQty, // positive delta to add stock back
       );
     }
 

@@ -14,6 +14,7 @@ import '../../data/repositories/customer_repository.dart';
 import '../../data/repositories/order_repository.dart';
 import '../../data/repositories/payment_repository.dart';
 import '../../data/repositories/product_repository.dart';
+import '../../data/repositories/product_unit_repository.dart';
 import '../../data/services/auth_service.dart';
 import '../../data/services/invoice_service.dart';
 import '../../data/services/recent_service.dart';
@@ -338,9 +339,10 @@ class PosScreen extends ConsumerWidget {
 
                   // update stock per item
                   for (final it in state.cartItems) {
+                    final baseDelta = -(it.quantity * it.unitFactor).round();
                     await productRepo.updateStock(
                       productId: it.productId,
-                      delta: -it.quantity,
+                      delta: baseDelta,
                     );
                   }
 
@@ -410,6 +412,7 @@ class PosScreen extends ConsumerWidget {
     }
 
     final matcher = VoiceOrderMatcher();
+    final productUnitRepo = ProductUnitRepository();
 
     Customer? customer;
     final customerName = cmd.customerName?.trim();
@@ -460,9 +463,36 @@ class PosScreen extends ConsumerWidget {
         );
       }
 
+      ProductUnitWithUnit? unitInfo;
+      final rawUnit = line.unit?.trim();
+      if (rawUnit != null && rawUnit.isNotEmpty) {
+        unitInfo = await productUnitRepo.findByProductAndUnitKey(
+          productId: product.id,
+          unitKey: rawUnit,
+        );
+      }
+      unitInfo ??= await productUnitRepo.getDefaultByProductWithUnit(
+        product.id,
+      );
+
+      final unitId = unitInfo?.productUnit.unitId;
+      final unitFactor = unitInfo?.productUnit.factor;
+      final unitName = unitInfo?.unit.name;
+      final unitPrice = unitInfo == null
+          ? null
+          : (unitInfo.productUnit.priceOverride ??
+                (product.salePrice * unitInfo.productUnit.factor));
+
       await ref
           .read(posControllerProvider.notifier)
-          .addProductWithQuantity(product, line.quantity);
+          .addProductWithQuantity(
+            product,
+            line.quantity,
+            unitId: unitId,
+            unitFactor: unitFactor,
+            unitName: unitName,
+            unitPrice: unitPrice,
+          );
       await RecentService.pushRecentSku(product.sku);
       added++;
     }

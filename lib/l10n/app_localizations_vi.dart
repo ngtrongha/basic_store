@@ -90,6 +90,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get addSupplier => 'Thêm nhà cung cấp';
 
   @override
+  String get addUnit => 'Thêm đơn vị';
+
+  @override
   String get save => 'Lưu';
 
   @override

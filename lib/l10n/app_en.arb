@@ -30,6 +30,7 @@
   "addProduct": "Add Product",
   "addCustomer": "Add Customer",
   "addSupplier": "Add Supplier",
+  "addUnit": "Add Unit",
   "save": "Save",
   "cancel": "Cancel",
   "delete": "Delete",

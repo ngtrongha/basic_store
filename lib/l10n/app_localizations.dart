@@ -260,6 +260,12 @@ abstract class AppLocalizations {
   /// **'Add Supplier'**
   String get addSupplier;
 
+  /// No description provided for @addUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Unit'**
+  String get addUnit;
+
   /// No description provided for @save.
   ///
   /// In en, this message translates to:

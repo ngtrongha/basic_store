@@ -29,11 +29,19 @@ class ReturnItem {
   double price = 0; // original price
   String reason = '';
 
+  /// Optional unit info (for returning converted units).
+  int? unitId;
+  double unitFactor = 1.0; // base units per 1 unit
+  String? unitName;
+
   Map<String, dynamic> toJson() => {
     'productId': productId,
     'quantity': quantity,
     'price': price,
     'reason': reason,
+    if (unitId != null) 'unitId': unitId,
+    if (unitFactor != 1.0) 'unitFactor': unitFactor,
+    if (unitName != null) 'unitName': unitName,
   };
 
   static ReturnItem fromJson(Map<String, dynamic> json) {
@@ -41,7 +49,10 @@ class ReturnItem {
       ..productId = json['productId'] as int? ?? 0
       ..quantity = json['quantity'] as int? ?? 0
       ..price = (json['price'] as num?)?.toDouble() ?? 0
-      ..reason = json['reason'] as String? ?? '';
+      ..reason = json['reason'] as String? ?? ''
+      ..unitId = (json['unitId'] as num?)?.toInt()
+      ..unitFactor = (json['unitFactor'] as num?)?.toDouble() ?? 1.0
+      ..unitName = json['unitName'] as String?;
   }
 }
 

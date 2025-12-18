@@ -103,6 +103,48 @@ class Products extends Table {
   TextColumn get barcode => text().nullable()();
 }
 
+@DataClassName('UnitRow')
+class Units extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text()();
+
+  /// Normalized key (e.g. "thung", "lon", "cai") used for matching/search.
+  TextColumn get key => text().unique()();
+
+  BoolColumn get isActive =>
+      boolean().named('is_active').withDefault(const Constant(true))();
+  DateTimeColumn get createdAt =>
+      dateTime().named('created_at').withDefault(currentDateAndTime)();
+}
+
+@DataClassName('ProductUnitRow')
+class ProductUnits extends Table {
+  IntColumn get productId =>
+      integer().named('product_id').references(Products, #id)();
+  IntColumn get unitId => integer().named('unit_id').references(Units, #id)();
+
+  /// Number of base units per 1 of this unit.
+  RealColumn get factor => real().withDefault(const Constant(1.0))();
+
+  BoolColumn get isBase =>
+      boolean().named('is_base').withDefault(const Constant(false))();
+  BoolColumn get isDefault =>
+      boolean().named('is_default').withDefault(const Constant(false))();
+
+  /// Optional override sale price for this unit.
+  RealColumn get priceOverride => real().named('price_override').nullable()();
+
+  /// Optional per-unit SKU/barcode for scanning.
+  TextColumn get sku => text().nullable().unique()();
+  TextColumn get barcode => text().nullable().unique()();
+
+  DateTimeColumn get createdAt =>
+      dateTime().named('created_at').withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {productId, unitId};
+}
+
 @DataClassName('ProductVariantRow')
 class ProductVariants extends Table {
   IntColumn get id => integer().autoIncrement()();

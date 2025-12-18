@@ -18,6 +18,7 @@ part 'app_database.g.dart';
     ProductBundles,
     ProductPrices,
     Products,
+    ProductUnits,
     ProductVariants,
     Promotions,
     PurchaseOrders,
@@ -26,6 +27,7 @@ part 'app_database.g.dart';
     StockTransfers,
     Stores,
     Suppliers,
+    Units,
     Users,
   ],
 )
@@ -33,7 +35,21 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onCreate: (m) async {
+      await m.createAll();
+    },
+    onUpgrade: (m, from, to) async {
+      // v2 adds Units and ProductUnits.
+      if (from < 2) {
+        await m.createTable(units);
+        await m.createTable(productUnits);
+      }
+    },
+  );
 }
 
 LazyDatabase _openConnection() {

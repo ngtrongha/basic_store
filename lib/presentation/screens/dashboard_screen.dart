@@ -96,6 +96,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onPressed: () => context.router.push(const ProductListRoute()),
           ),
           IconButton(
+            icon: const Icon(Icons.straighten),
+            tooltip: 'Đơn vị',
+            onPressed: () => context.router.push(const UnitsRoute()),
+          ),
+          IconButton(
             icon: const Icon(Icons.local_shipping),
             onPressed: () => context.router.push(const SuppliersRoute()),
           ),

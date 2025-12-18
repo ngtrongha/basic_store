@@ -19,6 +19,7 @@ import '../presentation/screens/stock_transfers_screen.dart';
 import '../presentation/screens/stores_screen.dart';
 import '../presentation/screens/suppliers_screen.dart';
 import '../presentation/screens/talker_logs_screen.dart';
+import '../presentation/screens/units_screen.dart';
 
 part 'app_router.gr.dart';
 
@@ -75,6 +76,7 @@ class AppRouter extends RootStackRouter {
       path: '/data-export',
       guards: [_authGuard],
     ),
+    AutoRoute(page: UnitsRoute.page, path: '/units', guards: [_authGuard]),
     AutoRoute(page: PosRoute.page, path: '/pos', guards: [_authGuard]),
     AutoRoute(
       page: OrderHistoryRoute.page,

@@ -37,10 +37,14 @@ class _CartItemTileState extends ConsumerState<CartItemTile> {
   @override
   Widget build(BuildContext context) {
     final productName = _product?.name ?? 'SP #${widget.item.productId}';
+    final unitLabel =
+        widget.item.unitName == null || widget.item.unitName!.isEmpty
+        ? ''
+        : ' ${widget.item.unitName}';
 
     return ListTile(
       title: Text(productName),
-      subtitle: Text('SL: ${widget.item.quantity}'),
+      subtitle: Text('SL: ${widget.item.quantity}$unitLabel'),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -52,6 +56,7 @@ class _CartItemTileState extends ConsumerState<CartItemTile> {
                   .read(posControllerProvider.notifier)
                   .updateQuantity(
                     productId: widget.item.productId,
+                    unitId: widget.item.unitId,
                     quantity: newQty,
                   );
             },
@@ -67,6 +72,7 @@ class _CartItemTileState extends ConsumerState<CartItemTile> {
                   .read(posControllerProvider.notifier)
                   .updateQuantity(
                     productId: widget.item.productId,
+                    unitId: widget.item.unitId,
                     quantity: newQty,
                   );
             },
@@ -76,7 +82,10 @@ class _CartItemTileState extends ConsumerState<CartItemTile> {
             onPressed: () {
               ref
                   .read(posControllerProvider.notifier)
-                  .removeProduct(widget.item.productId);
+                  .removeProduct(
+                    productId: widget.item.productId,
+                    unitId: widget.item.unitId,
+                  );
             },
           ),
         ],

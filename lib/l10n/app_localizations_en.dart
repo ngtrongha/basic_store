@@ -90,6 +90,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addSupplier => 'Add Supplier';
 
   @override
+  String get addUnit => 'Add Unit';
+
+  @override
   String get save => 'Save';
 
   @override

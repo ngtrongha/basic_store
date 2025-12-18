@@ -42,6 +42,7 @@ class VoiceOrderParser {
   };
 
   static const Set<String> _units = {
+    'cai',
     'thung',
     'loc',
     'chai',
@@ -49,6 +50,7 @@ class VoiceOrderParser {
     'hop',
     'goi',
     'bi',
+    'bich',
     'tui',
     'khay',
     'cay',
