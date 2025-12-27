@@ -223,7 +223,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 icon: Icons.qr_code,
                 label: 'QR',
                 color: AppColors.success,
-                onTap: () => context.router.push(const QrPaymentRoute()),
+                onTap: () => context.router.push(QrPaymentRoute()),
               ),
             ),
           ],
@@ -381,25 +381,91 @@ class _QuickActionButton extends StatelessWidget {
   }
 }
 
-// Placeholder tabs
-class _ProductsTab extends StatelessWidget {
+// Products tab - embedded product list
+class _ProductsTab extends ConsumerWidget {
   const _ProductsTab();
 
   @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Products Tab - Sẽ redirect sang ProductList'),
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        title: const Text('Sản phẩm'),
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () => context.router.push(ProductFormRoute()),
+          ),
+        ],
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.inventory_2_outlined,
+              size: 80,
+              color: AppColors.textSecondary,
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Quản lý sản phẩm',
+              style: TextStyle(fontSize: 18, color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: 24),
+            AppButton(
+              text: 'Xem danh sách sản phẩm',
+              onPressed: () => context.router.push(const ProductListRoute()),
+              icon: Icons.list,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
 
-class _CustomersTab extends StatelessWidget {
+class _CustomersTab extends ConsumerWidget {
   const _CustomersTab();
 
   @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Customers Tab - Sẽ redirect sang CustomerList'),
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        title: const Text('Khách hàng'),
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person_add),
+            onPressed: () => context.router.push(CustomerFormRoute()),
+          ),
+        ],
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.people_outlined,
+              size: 80,
+              color: AppColors.textSecondary,
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Quản lý khách hàng',
+              style: TextStyle(fontSize: 18, color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: 24),
+            AppButton(
+              text: 'Xem danh sách khách hàng',
+              onPressed: () => context.router.push(const CustomerListRoute()),
+              icon: Icons.list,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -455,7 +521,7 @@ class _SettingsTab extends ConsumerWidget {
           _SettingsTile(
             icon: Icons.qr_code,
             title: 'Cài đặt QR thanh toán',
-            onTap: () => context.router.push(const QrPaymentRoute()),
+            onTap: () => context.router.push(QrPaymentRoute()),
           ),
           _SettingsTile(
             icon: Icons.print_outlined,

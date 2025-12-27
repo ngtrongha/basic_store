@@ -226,18 +226,51 @@ class OtpVerificationRouteArgs {
 
 /// generated route for
 /// [PaymentSuccessScreen]
-class PaymentSuccessRoute extends PageRouteInfo<void> {
-  const PaymentSuccessRoute({List<PageRouteInfo>? children})
-    : super(PaymentSuccessRoute.name, initialChildren: children);
+class PaymentSuccessRoute extends PageRouteInfo<PaymentSuccessRouteArgs> {
+  PaymentSuccessRoute({
+    Key? key,
+    double amount = 0,
+    List<PageRouteInfo>? children,
+  }) : super(
+         PaymentSuccessRoute.name,
+         args: PaymentSuccessRouteArgs(key: key, amount: amount),
+         initialChildren: children,
+       );
 
   static const String name = 'PaymentSuccessRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const PaymentSuccessScreen();
+      final args = data.argsAs<PaymentSuccessRouteArgs>(
+        orElse: () => const PaymentSuccessRouteArgs(),
+      );
+      return PaymentSuccessScreen(key: args.key, amount: args.amount);
     },
   );
+}
+
+class PaymentSuccessRouteArgs {
+  const PaymentSuccessRouteArgs({this.key, this.amount = 0});
+
+  final Key? key;
+
+  final double amount;
+
+  @override
+  String toString() {
+    return 'PaymentSuccessRouteArgs{key: $key, amount: $amount}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! PaymentSuccessRouteArgs) return false;
+    return key == other.key && amount == other.amount;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ amount.hashCode;
 }
 
 /// generated route for
@@ -304,18 +337,48 @@ class ProductListRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [QrPaymentScreen]
-class QrPaymentRoute extends PageRouteInfo<void> {
-  const QrPaymentRoute({List<PageRouteInfo>? children})
-    : super(QrPaymentRoute.name, initialChildren: children);
+class QrPaymentRoute extends PageRouteInfo<QrPaymentRouteArgs> {
+  QrPaymentRoute({Key? key, double? amount, List<PageRouteInfo>? children})
+    : super(
+        QrPaymentRoute.name,
+        args: QrPaymentRouteArgs(key: key, amount: amount),
+        initialChildren: children,
+      );
 
   static const String name = 'QrPaymentRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const QrPaymentScreen();
+      final args = data.argsAs<QrPaymentRouteArgs>(
+        orElse: () => const QrPaymentRouteArgs(),
+      );
+      return QrPaymentScreen(key: args.key, amount: args.amount);
     },
   );
+}
+
+class QrPaymentRouteArgs {
+  const QrPaymentRouteArgs({this.key, this.amount});
+
+  final Key? key;
+
+  final double? amount;
+
+  @override
+  String toString() {
+    return 'QrPaymentRouteArgs{key: $key, amount: $amount}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! QrPaymentRouteArgs) return false;
+    return key == other.key && amount == other.amount;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ amount.hashCode;
 }
 
 /// generated route for
