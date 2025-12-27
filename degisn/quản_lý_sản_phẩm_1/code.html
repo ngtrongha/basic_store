@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Quản lý sản phẩm</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                    },
+                    fontFamily: {
+                        "display": ["Work Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-gray-100 antialiased min-h-screen pb-24 relative">
+<!-- Top AppBar -->
+<div class="sticky top-0 z-20 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
+<div class="flex items-center px-4 h-16 justify-between">
+<h2 class="text-xl font-bold leading-tight tracking-tight flex-1 dark:text-white">Sản phẩm</h2>
+<div class="flex items-center justify-end gap-3">
+<button class="flex items-center justify-center rounded-full size-10 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Main Content -->
+<main class="flex flex-col w-full">
+<!-- Search Bar -->
+<div class="px-4 py-3 sticky top-16 z-10 bg-background-light dark:bg-background-dark">
+<label class="flex flex-col h-12 w-full">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full shadow-sm">
+<div class="text-gray-500 dark:text-gray-400 flex border-none bg-white dark:bg-gray-800 items-center justify-center pl-4 rounded-l-xl">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl focus:outline-0 focus:ring-0 border-none bg-white dark:bg-gray-800 focus:border-none h-full placeholder:text-gray-400 dark:placeholder:text-gray-500 px-3 text-base font-normal leading-normal dark:text-white" placeholder="Tìm tên, mã vạch..." value=""/>
+<div class="text-primary flex border-none bg-white dark:bg-gray-800 items-center justify-center pr-4 rounded-r-xl cursor-pointer">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+</div>
+</div>
+</label>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-3 px-4 pb-2 overflow-x-auto hide-scrollbar w-full">
+<!-- Active Chip -->
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary text-black pl-3 pr-4 shadow-sm hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">apps</span>
+<p class="text-sm font-semibold leading-normal">Tất cả</p>
+</button>
+<!-- Inactive Chips -->
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 pl-3 pr-4 shadow-sm">
+<span class="material-symbols-outlined text-[20px] text-gray-500">bakery_dining</span>
+<p class="text-sm font-medium leading-normal dark:text-gray-200">Đồ ăn nhẹ</p>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 pl-3 pr-4 shadow-sm">
+<span class="material-symbols-outlined text-[20px] text-gray-500">local_cafe</span>
+<p class="text-sm font-medium leading-normal dark:text-gray-200">Đồ uống</p>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 pl-3 pr-4 shadow-sm">
+<span class="material-symbols-outlined text-[20px] text-gray-500">soup_kitchen</span>
+<p class="text-sm font-medium leading-normal dark:text-gray-200">Gia vị</p>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 pl-3 pr-4 shadow-sm">
+<span class="material-symbols-outlined text-[20px] text-gray-500">nutrition</span>
+<p class="text-sm font-medium leading-normal dark:text-gray-200">Rau củ</p>
+</button>
+</div>
+<!-- Product List -->
+<div class="flex flex-col px-4 py-2 gap-3">
+<!-- Item 1 -->
+<div class="flex gap-4 bg-white dark:bg-gray-800 p-3 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 items-center">
+<div class="bg-gray-100 dark:bg-gray-700 shrink-0 bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-[80px]" data-alt="Instant noodle package red color" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDvpifFZl-EoQcq_R9qNN7FRqSlz5Bch6FlTT50N-kjR3719saMVLb5AHuUsGuidtjkn8ndLKod-xSSdyxutbQDePwMSWEQWICbmb_UbuT-1IpAHIARZhkUknpdIhFDXQ7vJVQ9BO8dN5U-dIvKESV7lGsy_vIJ2RwVK_uspZaBLgUbcUKiU_o4fhAbceL011qWcrvN0kebsQZNoH979BbkbKs2djkT6aQ5KdMY3pRgJS0TMFssSLXo6Xr3PafoouVYGM4NdQUgBW9S");'>
+</div>
+<div class="flex flex-1 flex-col justify-center min-w-0">
+<div class="flex justify-between items-start">
+<h3 class="text-gray-900 dark:text-white text-base font-semibold leading-tight truncate pr-2">Mì Hảo Hảo Tôm Chua Cay</h3>
+<button class="text-gray-400 dark:text-gray-500 hover:text-gray-600">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+<p class="text-primary text-base font-bold mt-1">4.500 đ</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px] text-gray-400">inventory_2</span>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Tồn kho: 120</p>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex gap-4 bg-white dark:bg-gray-800 p-3 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 items-center">
+<div class="bg-gray-100 dark:bg-gray-700 shrink-0 bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-[80px]" data-alt="Bottle of Coca Cola soft drink" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCpzQCCQlAafzOvcAP3A85AEDTNE912U1oqMz2DiD30EplwHmlP0ToqzlgUMP3ajs6vWb3OnBUi0QgBAsfJeYbn-gSdXuo3IhCglDQEU0A28YjyYTqbTEwCB7-r7q3Aqs1LUJHcGRj0QoKfahPnr3hnNk-B9nzyK8ufbv2ZP6g_0z7kIQrMtW6k_RWlYWf5GsCkvWghTj4AVOHua4Z2IQ5ZNi8qj_QFqEtbwQW1b76ykx7_jejMlpW6yWSsZKF2xqVwu75akljKSRHx");'>
+</div>
+<div class="flex flex-1 flex-col justify-center min-w-0">
+<div class="flex justify-between items-start">
+<h3 class="text-gray-900 dark:text-white text-base font-semibold leading-tight truncate pr-2">Coca Cola 1.5L</h3>
+<button class="text-gray-400 dark:text-gray-500 hover:text-gray-600">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+<p class="text-primary text-base font-bold mt-1">18.000 đ</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px] text-orange-500">inventory_2</span>
+<p class="text-orange-500 text-sm font-medium">Tồn kho: 45</p>
+</div>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="flex gap-4 bg-white dark:bg-gray-800 p-3 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 items-center">
+<div class="bg-gray-100 dark:bg-gray-700 shrink-0 bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-[80px]" data-alt="Bag of premium white rice ST25" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBRI2ihnNFP0EtSBcgmzjbQz-HMxsHtrQmcQc3gol5k1s6c9MYIl7bQZolxZ3q__LJFZ01Kgyhns0Ll_IBqFhDv3CH8Gh7e9AHI3G2zY-XznodDqN7pmztFRie8gsUUjdF2URl2lRdr9GAvA5DKvbWxVWfXylu2pnDsaE4od5BLZGM01b-qZsWEVCupxgJpKij9Ay_nfiW6aztqVrhJhSHerZen9ypc1TqwfzIOtM_D3_CppZjOg4hHUuE2X-nxYVqPH6sUSaRERL4O");'>
+</div>
+<div class="flex flex-1 flex-col justify-center min-w-0">
+<div class="flex justify-between items-start">
+<h3 class="text-gray-900 dark:text-white text-base font-semibold leading-tight truncate pr-2">Gạo ST25 Ông Cua (5kg)</h3>
+<button class="text-gray-400 dark:text-gray-500 hover:text-gray-600">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+<p class="text-primary text-base font-bold mt-1">190.000 đ</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px] text-red-500">warning</span>
+<p class="text-red-500 text-sm font-medium">Tồn kho: 4</p>
+</div>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="flex gap-4 bg-white dark:bg-gray-800 p-3 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 items-center">
+<div class="bg-gray-100 dark:bg-gray-700 shrink-0 bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-[80px]" data-alt="Bottle of cooking oil" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCDCP8_S9iT6ypAdU6j3HzndslbrKzkAQuYsH2SFqoqP3jlOSjXiTJRvw0g239LdNNA9tQtY-7Bw5vreIJqQcptTfDkAf2x5sGHNV2gsbjPqFIawKm2sAchwBEij0M4XHmrrdT9FhlU7y5f21NbLHDVbF8SlZE75QaPHeMryvKPwxvrVKtyIWzWPDjQzM6HZngpTPokwTPH6u3g5ticCyQy4M7Ra25qGzwCVwGDdGRmeZlBl1PAB9D53NIEozQLDeMGDhiEf1ggyIcp");'>
+</div>
+<div class="flex flex-1 flex-col justify-center min-w-0">
+<div class="flex justify-between items-start">
+<h3 class="text-gray-900 dark:text-white text-base font-semibold leading-tight truncate pr-2">Dầu ăn Neptune Gold 1L</h3>
+<button class="text-gray-400 dark:text-gray-500 hover:text-gray-600">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+<p class="text-primary text-base font-bold mt-1">45.000 đ</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px] text-gray-400">inventory_2</span>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Tồn kho: 200</p>
+</div>
+</div>
+</div>
+<!-- Item 5 -->
+<div class="flex gap-4 bg-white dark:bg-gray-800 p-3 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 items-center">
+<div class="bg-gray-100 dark:bg-gray-700 shrink-0 bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-[80px]" data-alt="Carton of fresh milk" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBqWBWTpIF69chGqCAPwgryzhmLk7nVJqgIjdhvGgNM6mSxU4VaymYlH2tyj2R5rhfooA8gpjBbJn1at_oGv4K0lr0177p8NLGdzQzQ5aBjYT_JPsV1np_i5Sob0Da6BbkPmVy7hQAKuFjbvlwaYaXOJCjHtZgsQf9sf8YewkYBsTXQxXZbjxIIa3oOkMcYiZ5HviFzuYHPBYmyzsFhECRIOuZn3g2nfkKcd4704IddCQMwoc8US6JUtiE0p2k5rtlTK39TE2VxsVDU");'>
+</div>
+<div class="flex flex-1 flex-col justify-center min-w-0">
+<div class="flex justify-between items-start">
+<h3 class="text-gray-900 dark:text-white text-base font-semibold leading-tight truncate pr-2">Sữa tươi Vinamilk 100%</h3>
+<button class="text-gray-400 dark:text-gray-500 hover:text-gray-600">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+<p class="text-primary text-base font-bold mt-1">32.000 đ</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px] text-gray-400">inventory_2</span>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Tồn kho: 85</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button -->
+<div class="fixed bottom-24 right-4 z-30">
+<button class="flex items-center justify-center size-14 rounded-full bg-primary text-black shadow-lg hover:bg-[#0fdc50] transition-transform active:scale-95">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-20 bg-white dark:bg-background-dark border-t border-gray-200 dark:border-gray-800 pb-safe">
+<div class="flex justify-around items-center h-16 px-2">
+<button class="flex flex-col items-center justify-center w-full h-full space-y-1 text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-gray-300">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="text-[10px] font-medium">Tổng quan</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full space-y-1 text-primary">
+<span class="material-symbols-outlined fill-current">inventory_2</span>
+<span class="text-[10px] font-bold">Sản phẩm</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full space-y-1 text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-gray-300">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="text-[10px] font-medium">Đơn hàng</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full space-y-1 text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-gray-300">
+<span class="material-symbols-outlined">group</span>
+<span class="text-[10px] font-medium">Khách hàng</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full space-y-1 text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-gray-300">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-medium">Cài đặt</span>
+</button>
+</div>
+</nav>
+<!-- Fix for iOS bottom safe area if needed -->
+<style>
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+    </style>
+</body></html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Quét &amp; Tạo Đơn hàng</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                    },
+                    fontFamily: {
+                        "display": ["Work Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+    .scanner-overlay {
+        position: relative;
+    }
+    .scanner-overlay::before {
+        content: '';
+        position: absolute;
+        top: 20%;
+        left: 10%;
+        right: 10%;
+        height: 40%;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 12px;
+        box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+        z-index: 10;
+    }
+    .scanner-line {
+        position: absolute;
+        top: 20%;
+        left: 10%;
+        right: 10%;
+        height: 2px;
+        background: #13ec5b;
+        z-index: 20;
+        animation: scan 2s infinite linear;
+    }
+    @keyframes scan {
+        0% { top: 20%; }
+        50% { top: 60%; }
+        100% { top: 20%; }
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-gray-100 antialiased min-h-screen pb-32 relative flex flex-col">
+<div class="sticky top-0 z-30 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
+<div class="flex items-center px-4 h-16 justify-between">
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center rounded-full size-10 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h2 class="text-xl font-bold leading-tight tracking-tight dark:text-white">Tạo đơn hàng</h2>
+</div>
+<div class="flex items-center justify-end gap-3">
+<button class="flex items-center justify-center rounded-full size-10 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined">flash_on</span>
+</button>
+</div>
+</div>
+</div>
+<main class="flex flex-col w-full flex-1">
+<div class="relative w-full h-64 bg-gray-900 overflow-hidden shrink-0 scanner-overlay">
+<div class="absolute inset-0 flex items-center justify-center">
+<p class="text-white text-sm opacity-70 z-30 mt-48">Di chuyển camera đến mã vạch</p>
+</div>
+<div class="scanner-line"></div>
+<div class="absolute inset-0 bg-gradient-to-b from-black/20 to-black/60 z-0"></div>
+</div>
+<div class="px-4 -mt-6 z-20 relative mb-4">
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex items-center gap-3 border border-gray-100 dark:border-gray-700">
+<div class="bg-primary/10 rounded-full p-2 text-primary">
+<span class="material-symbols-outlined">keyboard</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-medium text-gray-900 dark:text-white">Nhập mã thủ công</p>
+<p class="text-xs text-gray-500">Nếu không quét được mã vạch</p>
+</div>
+<span class="material-symbols-outlined text-gray-400">chevron_right</span>
+</div>
+</div>
+<div class="flex flex-col px-4 gap-4 pb-4">
+<div class="flex justify-between items-center">
+<h3 class="text-lg font-bold text-gray-900 dark:text-white">Giỏ hàng (3)</h3>
+<button class="text-sm text-primary font-medium hover:underline">Xóa tất cả</button>
+</div>
+<div class="flex gap-3 bg-white dark:bg-gray-800 p-3 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 items-start relative">
+<div class="bg-gray-100 dark:bg-gray-700 shrink-0 bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-16" data-alt="Instant noodle package red color" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDvpifFZl-EoQcq_R9qNN7FRqSlz5Bch6FlTT50N-kjR3719saMVLb5AHuUsGuidtjkn8ndLKod-xSSdyxutbQDePwMSWEQWICbmb_UbuT-1IpAHIARZhkUknpdIhFDXQ7vJVQ9BO8dN5U-dIvKESV7lGsy_vIJ2RwVK_uspZaBLgUbcUKiU_o4fhAbceL011qWcrvN0kebsQZNoH979BbkbKs2djkT6aQ5KdMY3pRgJS0TMFssSLXo6Xr3PafoouVYGM4NdQUgBW9S");'>
+</div>
+<div class="flex flex-1 flex-col min-w-0">
+<h3 class="text-gray-900 dark:text-white text-sm font-semibold leading-tight truncate pr-6">Mì Hảo Hảo Tôm Chua Cay</h3>
+<p class="text-primary text-sm font-bold mt-1">4.500 đ</p>
+<div class="flex items-center justify-between mt-2">
+<div class="flex items-center border border-gray-200 dark:border-gray-600 rounded-lg h-8">
+<button class="w-8 h-full flex items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-l-lg">
+<span class="material-symbols-outlined text-base">remove</span>
+</button>
+<input class="w-10 h-full text-center text-sm font-medium border-none p-0 bg-transparent focus:ring-0 text-gray-900 dark:text-white" value="5"/>
+<button class="w-8 h-full flex items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-r-lg">
+<span class="material-symbols-outlined text-base">add</span>
+</button>
+</div>
+<p class="text-gray-900 dark:text-white font-bold text-sm">22.500 đ</p>
+</div>
+</div>
+<button class="absolute top-2 right-2 text-gray-400 hover:text-red-500">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+</div>
+<div class="flex gap-3 bg-white dark:bg-gray-800 p-3 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 items-start relative">
+<div class="bg-gray-100 dark:bg-gray-700 shrink-0 bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-16" data-alt="Bottle of Coca Cola soft drink" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCpzQCCQlAafzOvcAP3A85AEDTNE912U1oqMz2DiD30EplwHmlP0ToqzlgUMP3ajs6vWb3OnBUi0QgBAsfJeYbn-gSdXuo3IhCglDQEU0A28YjyYTqbTEwCB7-r7q3Aqs1LUJHcGRj0QoKfahPnr3hnNk-B9nzyK8ufbv2ZP6g_0z7kIQrMtW6k_RWlYWf5GsCkvWghTj4AVOHua4Z2IQ5ZNi8qj_QFqEtbwQW1b76ykx7_jejMlpW6yWSsZKF2xqVwu75akljKSRHx");'>
+</div>
+<div class="flex flex-1 flex-col min-w-0">
+<h3 class="text-gray-900 dark:text-white text-sm font-semibold leading-tight truncate pr-6">Coca Cola 1.5L</h3>
+<p class="text-primary text-sm font-bold mt-1">18.000 đ</p>
+<div class="flex items-center justify-between mt-2">
+<div class="flex items-center border border-gray-200 dark:border-gray-600 rounded-lg h-8">
+<button class="w-8 h-full flex items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-l-lg">
+<span class="material-symbols-outlined text-base">remove</span>
+</button>
+<input class="w-10 h-full text-center text-sm font-medium border-none p-0 bg-transparent focus:ring-0 text-gray-900 dark:text-white" value="2"/>
+<button class="w-8 h-full flex items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-r-lg">
+<span class="material-symbols-outlined text-base">add</span>
+</button>
+</div>
+<p class="text-gray-900 dark:text-white font-bold text-sm">36.000 đ</p>
+</div>
+</div>
+<button class="absolute top-2 right-2 text-gray-400 hover:text-red-500">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+</div>
+<div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl border border-blue-100 dark:border-blue-800 flex flex-col gap-3">
+<div class="flex gap-3 items-start">
+<div class="bg-blue-100 dark:bg-blue-800 p-2 rounded-lg text-blue-600 dark:text-blue-300 shrink-0">
+<span class="material-symbols-outlined">help_center</span>
+</div>
+<div>
+<h4 class="text-blue-900 dark:text-blue-100 font-semibold text-sm">Sản phẩm chưa có trong kho</h4>
+<p class="text-blue-700 dark:text-blue-300 text-xs mt-1">Mã vạch: <span class="font-mono bg-white/50 px-1 rounded">8934567890123</span> vừa quét không tồn tại.</p>
+</div>
+</div>
+<button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg">add_circle</span>
+Thêm sản phẩm mới
+</button>
+</div>
+</div>
+</main>
+<div class="fixed bottom-16 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-20 pb-safe">
+<div class="flex justify-between items-center mb-3">
+<span class="text-gray-500 dark:text-gray-400 text-sm">Tổng cộng (7 món)</span>
+<span class="text-xl font-bold text-gray-900 dark:text-white">58.500 đ</span>
+</div>
+<button class="w-full bg-primary hover:bg-[#0fdc50] text-black font-bold h-12 rounded-xl flex items-center justify-center gap-2 shadow-lg active:scale-[0.98] transition-transform">
+<span>Hoàn tất đơn hàng</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<nav class="fixed bottom-0 w-full z-20 bg-white dark:bg-background-dark border-t border-gray-200 dark:border-gray-800 pb-safe">
+<div class="flex justify-around items-center h-16 px-2">
+<button class="flex flex-col items-center justify-center w-full h-full space-y-1 text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-gray-300">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="text-[10px] font-medium">Tổng quan</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full space-y-1 text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-gray-300">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-[10px] font-medium">Sản phẩm</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full space-y-1 text-primary">
+<span class="material-symbols-outlined fill-current">shopping_cart</span>
+<span class="text-[10px] font-bold">Đơn hàng</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full space-y-1 text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-gray-300">
+<span class="material-symbols-outlined">group</span>
+<span class="text-[10px] font-medium">Khách hàng</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full space-y-1 text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-gray-300">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-medium">Cài đặt</span>
+</button>
+</div>
+</nav>
+<style>
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+    </style>
+</body></html>

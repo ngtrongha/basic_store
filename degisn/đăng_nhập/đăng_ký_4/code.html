@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tạo mật khẩu mới - Quản Lý Tạp Hóa</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "primary-dark": "#0eb545",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a3322",
+                    },
+                    fontFamily: {
+                        "display": ["Work Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(600px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white min-h-screen flex flex-col justify-between overflow-x-hidden antialiased transition-colors duration-300">
+<div class="flex-1 flex flex-col px-6 pt-12 pb-4 w-full max-w-md mx-auto justify-center">
+<div class="flex flex-col items-center mb-10">
+<div class="w-20 h-20 bg-primary/20 rounded-2xl flex items-center justify-center mb-6 text-primary dark:text-primary shadow-inner">
+<span class="material-symbols-outlined !text-[48px]">encrypted</span>
+</div>
+<h1 class="text-3xl font-bold tracking-tight text-center mb-3">Tạo mật khẩu mới</h1>
+<p class="text-slate-500 dark:text-slate-400 text-base text-center max-w-xs leading-relaxed">
+            Mật khẩu mới của bạn phải khác với mật khẩu đã sử dụng trước đó.
+        </p>
+</div>
+<form class="flex flex-col gap-5" onsubmit="event.preventDefault();">
+<div class="space-y-2 group">
+<label class="text-sm font-medium text-slate-700 dark:text-slate-300 ml-1" for="new-password">Mật khẩu mới</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined !text-[22px]">lock</span>
+</div>
+<input class="block w-full pl-12 pr-12 py-4 bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-slate-700 rounded-xl text-base placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/50 transition-all duration-200 shadow-sm" id="new-password" placeholder="••••••••" type="password"/>
+<button class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors" onclick="const input = document.getElementById('new-password'); input.type = input.type === 'password' ? 'text' : 'password';" type="button">
+<span class="material-symbols-outlined !text-[20px]">visibility_off</span>
+</button>
+</div>
+</div>
+<div class="space-y-2 group">
+<label class="text-sm font-medium text-slate-700 dark:text-slate-300 ml-1" for="confirm-password">Xác nhận mật khẩu mới</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined !text-[22px]">lock_reset</span>
+</div>
+<input class="block w-full pl-12 pr-12 py-4 bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-slate-700 rounded-xl text-base placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/50 transition-all duration-200 shadow-sm" id="confirm-password" placeholder="••••••••" type="password"/>
+<button class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors" onclick="const input = document.getElementById('confirm-password'); input.type = input.type === 'password' ? 'text' : 'password';" type="button">
+<span class="material-symbols-outlined !text-[20px]">visibility_off</span>
+</button>
+</div>
+</div>
+<div class="pt-2">
+<button class="w-full bg-primary hover:bg-primary-dark text-slate-900 font-bold py-4 rounded-xl shadow-lg shadow-primary/25 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 text-lg" type="submit">
+<span>Cập nhật mật khẩu</span>
+<span class="material-symbols-outlined !text-[22px]">check_circle</span>
+</button>
+</div>
+</form>
+</div>
+<div class="p-8 text-center pb-12">
+<a class="inline-flex items-center gap-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white font-medium transition-colors py-2 px-4 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined !text-[18px]">arrow_back</span>
+<span>Quay lại Đăng nhập</span>
+</a>
+</div>
+<div class="fixed top-0 left-0 w-full h-full pointer-events-none -z-10 overflow-hidden">
+<div class="absolute -top-[10%] -right-[10%] w-[50%] h-[30%] bg-primary/10 rounded-full blur-[80px]"></div>
+<div class="absolute top-[40%] -left-[10%] w-[40%] h-[40%] bg-emerald-500/5 rounded-full blur-[100px]"></div>
+</div>
+</body></html>

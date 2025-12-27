@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tạp hóa Ba Cô - Dashboard</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;family=Noto+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                    },
+                    fontFamily: {
+                        "display": ["Work Sans", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar hiding for clean UI */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#0d1b12] dark:text-white font-display overflow-x-hidden pb-24">
+<!-- Top App Bar -->
+<div class="sticky top-0 z-50 flex items-center bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm p-4 pb-2 justify-between border-b border-gray-200 dark:border-gray-800">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 shadow-sm border border-gray-100 dark:border-gray-700" data-alt="Profile picture of store owner" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA-PSDY1j0s34BByylMvdFbryrjF1D6qExA_YgMZmj1_x1DY2CEe-41tRot0mhj9ftUIj_14qss9hvdgdErSc1utm9cnLb9YDc6BMoRWl7clnxOl868Cwxbijw0PgY8-Anq1Xu27nsnlBAwJv092XKg-z9Iaewn1xxgxtdQN9z0x5H0yiWWjjzkVoj18mHYqw2VMffg0KpadaJWRGppyh1aM7tcHr9rO1NVwjTO5re2A9aJ_auHp5-7j4f4K0FwgWqrylXYqQfP5r54");'>
+</div>
+<div>
+<p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Xin chào,</p>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">Tạp hóa Ba Cô</h2>
+</div>
+</div>
+<div class="flex items-center justify-end">
+<button class="flex size-10 cursor-pointer items-center justify-center rounded-full bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-[#0d1b12] dark:text-white relative shadow-sm">
+<span class="material-symbols-outlined text-[24px]">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border border-white dark:border-gray-800"></span>
+</button>
+</div>
+</div>
+<!-- Quick Actions (Moved up for better UX on mobile) -->
+<div class="flex flex-col gap-2 pt-6 px-4">
+<div class="flex gap-3">
+<button class="flex flex-1 cursor-pointer items-center justify-center overflow-hidden rounded-xl h-14 px-4 bg-primary text-[#0d1b12] text-base font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined mr-2">add_circle</span>
+<span class="truncate">Tạo đơn mới</span>
+</button>
+<button class="flex w-14 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-xl h-14 bg-[#d1fadf] dark:bg-[#1a3524] text-[#0d1b12] dark:text-primary font-bold hover:bg-[#bbf7d0] dark:hover:bg-[#234430] transition-colors">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+</button>
+</div>
+</div>
+<!-- Stats Section -->
+<div class="flex flex-col gap-4 p-4 mt-2">
+<div class="flex flex-wrap gap-4">
+<!-- Revenue Card -->
+<div class="flex min-w-[158px] flex-1 flex-col justify-between gap-2 rounded-2xl p-5 bg-white dark:bg-[#1c2e22] shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-[#e7f3eb] dark:bg-white/10 rounded-lg text-primary w-fit">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+</div>
+<span class="text-[#078829] dark:text-[#4ade80] text-sm font-bold bg-[#e7f3eb] dark:bg-green-900/30 px-2 py-0.5 rounded-full">+12%</span>
+</div>
+<div>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium leading-normal mt-2">Doanh thu hôm nay</p>
+<p class="text-[#0d1b12] dark:text-white tracking-tight text-2xl font-bold leading-tight mt-1">1,250,000đ</p>
+</div>
+</div>
+<!-- Orders Card -->
+<div class="flex min-w-[158px] flex-1 flex-col justify-between gap-2 rounded-2xl p-5 bg-white dark:bg-[#1c2e22] shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-[#fff4e5] dark:bg-orange-900/20 rounded-lg text-orange-600 w-fit">
+<span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+</div>
+</div>
+<div>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium leading-normal mt-2">Đơn hàng</p>
+<p class="text-[#0d1b12] dark:text-white tracking-tight text-2xl font-bold leading-tight mt-1">15</p>
+</div>
+</div>
+</div>
+<!-- Debt Card (Full Width) -->
+<div class="flex w-full items-center justify-between gap-4 rounded-2xl p-5 bg-white dark:bg-[#1c2e22] shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="flex items-center gap-4">
+<div class="p-3 bg-[#fee2e2] dark:bg-red-900/20 rounded-full text-red-600">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</div>
+<div class="flex flex-col">
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Nợ cần thu</p>
+<p class="text-[#0d1b12] dark:text-white text-lg font-bold">450,000đ</p>
+</div>
+</div>
+<button class="text-sm font-semibold text-primary dark:text-primary hover:underline">Xem chi tiết</button>
+</div>
+</div>
+<!-- Chart Section -->
+<div class="flex flex-col px-4 pt-2 pb-4">
+<div class="flex justify-between items-end pb-4">
+<h2 class="text-[#0d1b12] dark:text-white text-xl font-bold leading-tight">Hoạt động tuần này</h2>
+<div class="flex gap-2">
+<span class="size-2 rounded-full bg-primary mt-2"></span>
+<span class="text-xs text-gray-500 dark:text-gray-400">Doanh thu</span>
+</div>
+</div>
+<!-- CSS-only Bar Chart -->
+<div class="w-full bg-white dark:bg-[#1c2e22] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-800 overflow-x-auto no-scrollbar">
+<div class="flex items-end justify-between gap-3 h-40 min-w-[280px]">
+<!-- Mon -->
+<div class="flex flex-col items-center gap-2 flex-1 group cursor-pointer">
+<div class="w-full bg-[#f0fdf4] dark:bg-white/5 rounded-t-sm h-full flex items-end relative">
+<div class="w-full bg-primary rounded-t-sm transition-all duration-500 hover:opacity-80" style="height: 45%;"></div>
+<!-- Tooltip -->
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">450k</div>
+</div>
+<span class="text-xs text-gray-500 font-medium">T2</span>
+</div>
+<!-- Tue -->
+<div class="flex flex-col items-center gap-2 flex-1 group cursor-pointer">
+<div class="w-full bg-[#f0fdf4] dark:bg-white/5 rounded-t-sm h-full flex items-end relative">
+<div class="w-full bg-primary rounded-t-sm transition-all duration-500 hover:opacity-80" style="height: 65%;"></div>
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">650k</div>
+</div>
+<span class="text-xs text-gray-500 font-medium">T3</span>
+</div>
+<!-- Wed -->
+<div class="flex flex-col items-center gap-2 flex-1 group cursor-pointer">
+<div class="w-full bg-[#f0fdf4] dark:bg-white/5 rounded-t-sm h-full flex items-end relative">
+<div class="w-full bg-primary rounded-t-sm transition-all duration-500 hover:opacity-80" style="height: 30%;"></div>
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">300k</div>
+</div>
+<span class="text-xs text-gray-500 font-medium">T4</span>
+</div>
+<!-- Thu -->
+<div class="flex flex-col items-center gap-2 flex-1 group cursor-pointer">
+<div class="w-full bg-[#f0fdf4] dark:bg-white/5 rounded-t-sm h-full flex items-end relative">
+<div class="w-full bg-primary rounded-t-sm transition-all duration-500 hover:opacity-80" style="height: 85%;"></div>
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">850k</div>
+</div>
+<span class="text-xs text-gray-500 font-medium">T5</span>
+</div>
+<!-- Fri -->
+<div class="flex flex-col items-center gap-2 flex-1 group cursor-pointer">
+<div class="w-full bg-[#f0fdf4] dark:bg-white/5 rounded-t-sm h-full flex items-end relative">
+<div class="w-full bg-primary rounded-t-sm transition-all duration-500 hover:opacity-80" style="height: 55%;"></div>
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">550k</div>
+</div>
+<span class="text-xs text-gray-500 font-medium">T6</span>
+</div>
+<!-- Sat -->
+<div class="flex flex-col items-center gap-2 flex-1 group cursor-pointer">
+<div class="w-full bg-[#f0fdf4] dark:bg-white/5 rounded-t-sm h-full flex items-end relative">
+<div class="w-full bg-primary rounded-t-sm transition-all duration-500 hover:opacity-80" style="height: 90%;"></div>
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">900k</div>
+</div>
+<span class="text-xs text-gray-500 font-medium text-primary font-bold">T7</span>
+</div>
+<!-- Sun -->
+<div class="flex flex-col items-center gap-2 flex-1 group cursor-pointer">
+<div class="w-full bg-[#f0fdf4] dark:bg-white/5 rounded-t-sm h-full flex items-end relative">
+<div class="w-full bg-gray-300 dark:bg-gray-600 rounded-t-sm" style="height: 10%;"></div>
+</div>
+<span class="text-xs text-gray-400 font-medium">CN</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Inventory Alerts -->
+<div class="flex flex-col px-4 pt-2 pb-6">
+<div class="flex justify-between items-center pb-3">
+<h2 class="text-[#0d1b12] dark:text-white text-xl font-bold leading-tight">Sắp hết hàng</h2>
+<button class="text-sm font-medium text-gray-500 dark:text-gray-400">Xem tất cả</button>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Item 1 -->
+<div class="flex items-center gap-3 bg-white dark:bg-[#1c2e22] p-3 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="w-16 h-16 shrink-0 rounded-lg bg-gray-100 dark:bg-gray-700 bg-center bg-cover" data-alt="Noodles package red packaging" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAYDEl5vvbItHliRU5BBmuqbne0KhbYw0qp9POkkAfdzrJJSnaFDaj3_ri8svudAxCKc_aLQvnWxBB8iQtVrX2ZTZBOfzPX3aYR7vhLqyEzz642XG5JLTBwvpmdlos5cafR3tt5vpzbhUL1Q6tBGn1F5YD5mXBI-Pbo25sDUBHnfB7pcUBv0Xe8N0Xe-rr-oO-bqvgevhe_Ru0wQEdaLLosPyPOe9xFDYdyHL9OtfETqYiOVUi_s1AUU0Sgijv8gRE_yG9fzq7DNpNZ");'></div>
+<div class="flex-1 min-w-0">
+<h3 class="text-sm font-bold text-[#0d1b12] dark:text-white truncate">Mì Hảo Hảo Tôm Chua Cay</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Hàng khô • Gói</p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-xs font-medium text-gray-500 dark:text-gray-400">Còn lại</span>
+<span class="text-sm font-bold text-red-500 bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded-md">03</span>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center gap-3 bg-white dark:bg-[#1c2e22] p-3 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="w-16 h-16 shrink-0 rounded-lg bg-gray-100 dark:bg-gray-700 bg-center bg-cover" data-alt="Cooking oil bottle yellow liquid" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBOnSD_C5OCO3Mq7YyKgwlAtbl5AGqnAlRj8VL4dqQqM9vftisvhGa4eEUYV9p9MMY5v6xtRBnYCDluRi3ZmfINmS1Evb4H5hoUa8MQaC9gVoFHP4H8nUMNDRuRXUMQOB1-JuZCBU_tdmqW3288jQ0jK2yVa5Avx05vN1hFWe7jtTmiKMr7Yex8HiTxNe6TItQ3PMga1cDMO-p2oVApzb75S8nRtNE-FGjv2BiSa9lWkYZ84RtmWL6HBwkhY3aAGNiAeuID8UkB4SP5");'></div>
+<div class="flex-1 min-w-0">
+<h3 class="text-sm font-bold text-[#0d1b12] dark:text-white truncate">Dầu ăn Tường An 1L</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Gia vị • Chai</p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-xs font-medium text-gray-500 dark:text-gray-400">Còn lại</span>
+<span class="text-sm font-bold text-red-500 bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded-md">02</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation Bar (iOS Style) -->
+<div class="fixed bottom-0 left-0 w-full bg-white/90 dark:bg-[#102216]/90 backdrop-blur-md border-t border-gray-200 dark:border-gray-800 pb-safe pt-2 px-6 z-50">
+<div class="flex justify-between items-center h-16 max-w-md mx-auto">
+<!-- Home (Active) -->
+<button class="flex flex-col items-center gap-1 w-12 text-primary group">
+<div class="p-1 rounded-2xl bg-primary/10 transition-colors">
+<span class="material-symbols-outlined filled text-[24px]">home</span>
+</div>
+<span class="text-[10px] font-bold">Trang chủ</span>
+</button>
+<!-- Products -->
+<button class="flex flex-col items-center gap-1 w-12 text-gray-400 dark:text-gray-500 hover:text-[#0d1b12] dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[24px]">inventory_2</span>
+<span class="text-[10px] font-medium">Hàng hóa</span>
+</button>
+<!-- Orders -->
+<button class="flex flex-col items-center gap-1 w-12 text-gray-400 dark:text-gray-500 hover:text-[#0d1b12] dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[24px]">receipt_long</span>
+<span class="text-[10px] font-medium">Đơn hàng</span>
+</button>
+<!-- Customers -->
+<button class="flex flex-col items-center gap-1 w-12 text-gray-400 dark:text-gray-500 hover:text-[#0d1b12] dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[24px]">group</span>
+<span class="text-[10px] font-medium">Khách</span>
+</button>
+<!-- Menu -->
+<button class="flex flex-col items-center gap-1 w-12 text-gray-400 dark:text-gray-500 hover:text-[#0d1b12] dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[24px]">menu</span>
+<span class="text-[10px] font-medium">Thêm</span>
+</button>
+</div>
+</div>
+<!-- Safe area spacing for phones with notch/home indicator -->
+<div class="h-6 w-full"></div>
+</body></html>

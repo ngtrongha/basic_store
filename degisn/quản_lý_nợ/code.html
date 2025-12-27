@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Quản lý nợ</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "primary-dark": "#0fb846",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a3322",
+                        "text-main-light": "#0d1b12",
+                        "text-main-dark": "#eef4f0",
+                        "text-sub-light": "#4c9a66",
+                        "text-sub-dark": "#8abf9e",
+                        "danger": "#ef4444",
+                    },
+                    fontFamily: {
+                        "display": ["Work Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-main-light dark:text-text-main-dark transition-colors duration-200">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden pb-24">
+<!-- Header -->
+<div class="sticky top-0 z-20 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md px-4 pt-12 pb-2 shadow-sm border-b border-gray-100 dark:border-gray-800">
+<div class="flex items-center justify-between">
+<button class="flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-10">Quản lý nợ</h2>
+<div class="absolute right-4 flex items-center">
+<button class="flex size-10 items-center justify-center rounded-full bg-primary text-black shadow-lg hover:bg-primary-dark transition-colors">
+<span class="material-symbols-outlined text-2xl font-bold">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 flex flex-col gap-4 p-4">
+<!-- Summary Stats -->
+<div class="flex gap-4">
+<div class="flex flex-1 flex-col gap-2 rounded-xl p-4 bg-surface-light dark:bg-surface-dark shadow-sm border border-gray-100 dark:border-gray-800 relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-3 opacity-10">
+<span class="material-symbols-outlined text-4xl text-primary">arrow_circle_down</span>
+</div>
+<p class="text-sm font-medium text-text-sub-light dark:text-text-sub-dark">Tổng phải thu</p>
+<p class="text-2xl font-bold tracking-tight text-green-600 dark:text-green-400">5.000.000đ</p>
+</div>
+<div class="flex flex-1 flex-col gap-2 rounded-xl p-4 bg-surface-light dark:bg-surface-dark shadow-sm border border-gray-100 dark:border-gray-800 relative overflow-hidden">
+<div class="absolute right-0 top-0 p-3 opacity-10">
+<span class="material-symbols-outlined text-4xl text-danger">arrow_circle_up</span>
+</div>
+<p class="text-sm font-medium text-text-sub-light dark:text-text-sub-dark">Tổng phải trả</p>
+<p class="text-2xl font-bold tracking-tight text-danger">2.000.000đ</p>
+</div>
+</div>
+<!-- Search Bar -->
+<div>
+<label class="flex flex-col h-12 w-full">
+<div class="flex w-full flex-1 items-center rounded-xl bg-white dark:bg-surface-dark shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+<div class="flex items-center justify-center pl-4 text-text-sub-light dark:text-text-sub-dark">
+<span class="material-symbols-outlined text-2xl">search</span>
+</div>
+<input class="w-full flex-1 border-none bg-transparent py-3 pl-3 pr-4 text-base text-text-main-light dark:text-text-main-dark placeholder:text-gray-400 focus:ring-0" placeholder="Tìm tên hoặc số điện thoại"/>
+</div>
+</label>
+</div>
+<!-- Segmented Control -->
+<div class="flex w-full rounded-xl bg-gray-200 dark:bg-gray-800 p-1">
+<button class="flex-1 rounded-lg bg-white dark:bg-surface-dark py-2 text-sm font-bold text-text-main-light dark:text-text-main-dark shadow-sm transition-all">
+                    Phải thu
+                </button>
+<button class="flex-1 rounded-lg py-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-text-main-light dark:hover:text-text-main-dark transition-all">
+                    Phải trả
+                </button>
+</div>
+<!-- Filters & Sort (Optional small bar) -->
+<div class="flex justify-between items-center pt-2 pb-1">
+<p class="text-sm font-medium text-text-sub-light dark:text-text-sub-dark">Danh sách (3)</p>
+<button class="flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+<span class="material-symbols-outlined text-lg">filter_list</span>
+                    Lọc
+                </button>
+</div>
+<!-- List Items -->
+<div class="flex flex-col gap-3">
+<!-- Item 1: High Priority -->
+<div class="flex items-center justify-between rounded-xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border-l-4 border-l-primary active:scale-[0.99] transition-transform">
+<div class="flex items-center gap-4">
+<div class="relative h-12 w-12 shrink-0">
+<div class="h-full w-full rounded-full bg-cover bg-center" data-alt="Portrait of a male customer looking friendly" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBVHX5RL_btBkRDVGqCO9sPD68XOAwczaj_OE7CbaX4Du7HLwv75h16tPPgI05WcbSRIyz30wWZw02kc-vF2hXAuFKeRgk-KlikkT5BpfaWTKpRIkTsNUSw434kfPZOU2yVa1Jb67kfdC4wU9VghMhVDnWNY2zEkvFgV8ynvTFfw50rQMJB0RcUbisRD9eswSAWylAd5rWMKDVihSKh2UytB-tawo1n1lKVQkjpM-f4edlB8ms5R9GDLOitPe5zpmHeb5KhJ4VlKq_Z");'></div>
+<div class="absolute -bottom-1 -right-1 flex size-5 items-center justify-center rounded-full bg-white dark:bg-surface-dark">
+<span class="material-symbols-outlined text-sm text-yellow-500 fill-1">star</span>
+</div>
+</div>
+<div class="flex flex-col">
+<p class="text-base font-bold text-text-main-light dark:text-text-main-dark line-clamp-1">Anh Nam (Khách quen)</p>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">schedule</span>
+                                20/10/2023 • Quá hạn
+                            </p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<p class="text-base font-bold text-green-600 dark:text-green-400">150.000đ</p>
+<button class="rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-green-700 dark:text-green-300">Nhắc nợ</button>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center justify-between rounded-xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800 active:scale-[0.99] transition-transform">
+<div class="flex items-center gap-4">
+<div class="h-12 w-12 shrink-0 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 font-bold text-lg">
+                            C
+                        </div>
+<div class="flex flex-col">
+<p class="text-base font-bold text-text-main-light dark:text-text-main-dark line-clamp-1">Chị Lan (Tạp hoá)</p>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">schedule</span>
+                                Hôm nay, 09:30
+                            </p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<p class="text-base font-bold text-green-600 dark:text-green-400">320.000đ</p>
+<span class="text-xs font-medium text-gray-400">Mới tạo</span>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center justify-between rounded-xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800 active:scale-[0.99] transition-transform">
+<div class="flex items-center gap-4">
+<div class="relative h-12 w-12 shrink-0">
+<div class="h-full w-full rounded-full bg-cover bg-center" data-alt="Portrait of a young female customer smiling" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuATL_JSCK1Xo1H_xU6pl3ueFh8EyPpFJnYl_orKzurmqlcWERjtKRl4TYG9kXJA8SDP2-xsbVigCQU-GxhoZlDogVufy0JFqDv9h8jCuRnDZms3ws59HhXfl7SECvHIy58ex6kydCNW-PARRIWv2aSkTG1R1RZScJmu_J9gNG73U82y6ogl62uucbBDer3P9VfQUuyG5_qX4J6zO-j9sIdVrua6xqHLfHl6I-WAUIaJzTatPjI_9l0jk3KkiP6mbIWNsWdn-UOseXdK");'></div>
+</div>
+<div class="flex flex-col">
+<p class="text-base font-bold text-text-main-light dark:text-text-main-dark line-clamp-1">Em Hương</p>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">schedule</span>
+                                18/10/2023
+                            </p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<p class="text-base font-bold text-green-600 dark:text-green-400">50.000đ</p>
+<div class="flex gap-2">
+<button class="flex items-center justify-center size-7 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+<span class="material-symbols-outlined text-sm">qr_code_2</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Empty State Illustration Placeholder (Hidden for now as list has items) -->
+<!-- 
+            <div class="flex flex-col items-center justify-center py-12 opacity-50">
+                <span class="material-symbols-outlined text-6xl text-gray-300 mb-4">account_balance_wallet</span>
+                <p class="text-center text-sm">Chưa có khoản nợ nào</p>
+            </div> 
+            -->
+<div class="h-6"></div>
+</div>
+<!-- Bottom Navigation -->
+<div class="fixed bottom-0 left-0 z-50 w-full bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-800 pb-safe pt-2 px-2">
+<div class="flex items-center justify-between px-2 pb-4">
+<button class="group flex flex-1 flex-col items-center justify-center gap-1 p-1">
+<span class="material-symbols-outlined text-2xl text-gray-400 group-hover:text-primary transition-colors">home</span>
+<span class="text-[10px] font-medium text-gray-400 group-hover:text-primary transition-colors">Trang chủ</span>
+</button>
+<button class="group flex flex-1 flex-col items-center justify-center gap-1 p-1">
+<span class="material-symbols-outlined text-2xl text-gray-400 group-hover:text-primary transition-colors">receipt_long</span>
+<span class="text-[10px] font-medium text-gray-400 group-hover:text-primary transition-colors">Đơn hàng</span>
+</button>
+<button class="group flex flex-1 flex-col items-center justify-center gap-1 p-1">
+<div class="rounded-full bg-primary/10 px-4 py-1">
+<span class="material-symbols-outlined text-2xl text-primary font-bold">account_balance_wallet</span>
+</div>
+<span class="text-[10px] font-bold text-primary">Sổ nợ</span>
+</button>
+<button class="group flex flex-1 flex-col items-center justify-center gap-1 p-1">
+<span class="material-symbols-outlined text-2xl text-gray-400 group-hover:text-primary transition-colors">groups</span>
+<span class="text-[10px] font-medium text-gray-400 group-hover:text-primary transition-colors">Khách hàng</span>
+</button>
+<button class="group flex flex-1 flex-col items-center justify-center gap-1 p-1">
+<span class="material-symbols-outlined text-2xl text-gray-400 group-hover:text-primary transition-colors">settings</span>
+<span class="text-[10px] font-medium text-gray-400 group-hover:text-primary transition-colors">Cài đặt</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>
